@@ -1,68 +1,87 @@
-# 人工不智能 Unprompted
+[中文说明](README.zh-CN.md)
 
-手机语言是中文时是“人工不智能”，其他语言是英文版“Unprompted”。两个版本不是互相翻译的：悼词、梗和断舍离清单各写了一套。
+# Unprompted Agent
 
-- 界面文字：`res/values/strings.xml`（英文，默认）和 `res/values-zh/strings.xml`（中文）
-- 悼词：`EulogyZh.kt`、`EulogyEn.kt`
-- 断舍离清单：`Declutter.kt` 里的 `zhCopy`、`enCopy`。英文版列的是 X、LinkedIn、Instagram、Threads、TikTok、YouTube、Reddit
+**Back to November 29, 2022.**
 
-想看英文版，把手机系统语言切到英文再打开 App 就行。
+A small Android app for saying goodbye to the AI apps on your phone, one eulogy at a time. Then clean up the AI hype in your social feeds, by hand.
 
-2022 年 11 月 30 日，ChatGPT 发布。这个安卓 App 帮你回到它发布的前一天：2022 年 11 月 29 日，AI 还没住进你手机的最后一天。
+[![Build APK](https://github.com/KaguraNanaga/unpromted-agent/actions/workflows/build.yml/badge.svg)](https://github.com/KaguraNanaga/unpromted-agent/actions/workflows/build.yml)
 
-它有两页。
+**[Download the bilingual APK](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-v0.1.0-preview.apk)** · [Release notes](https://github.com/KaguraNanaga/unpromted-agent/releases/tag/v0.1.0) · [Report an issue](https://github.com/KaguraNanaga/unpromted-agent/issues)
 
-**送走 App**：找出手机里的 AI 软件，给每一个念一段悼词，然后调起系统的卸载确认框。按下“确定”的永远是你自己。系统自带、卸不掉的（比如有些手机预装的 Gemini），会带你去设置页停用。全部送走之后，它会请你把它也卸载掉。
+## See it in action
 
-**断舍离清单**：AI 不只装在手机里，也住在你的关注列表里。这一页列出该取关的账号类型和关键词，一键打开小红书、微信、微博等 App，由你亲手取关，回来给自己记一笔。它不替你点任何东西，所以不会碰到这些平台的自动化封号规则。
+<a href="https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4"><img src="docs/assets/demo.gif" alt="Unprompted demo: scanning AI apps, changing eulogies, and opening the unfollow list" width="280"></a>
 
-## 不装 Android Studio，用 GitHub 编译
+[29-second MP4](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4). The recording shows the Chinese interface with English captions. The app also includes a full English interface.
 
-项目已包含完整的 Gradle Wrapper 和经过验证的 GitHub Actions 构建配置，电脑无需安装 Android Studio、Java 或安卓 SDK。
+## Two pages, one way back
 
-1. 将此目录中的文件上传到 GitHub 仓库根目录，保留 `.github` 和 `gradle` 目录。根目录应直接包含 `settings.gradle.kts`、`gradlew` 和 `app`。
-2. 每次提交代码都会自动构建。也可以打开 **Actions → Build APK → Run workflow** 手动运行。
-3. 等本次运行显示绿色勾号，在运行详情底部 **Artifacts** 下载 **unprompted-debug-apk**，或点击摘要中的“下载测试版 APK”。下载需要登录有权访问仓库的 GitHub 账号。
-4. 解压 ZIP，将 `unprompted-debug.apk` 传到安卓 8.0 或更高版本的手机，打开安装；提示时允许当前浏览器或文件管理器“安装未知应用”。
+### Send off apps
 
-产物保留 30 天，过期后可重新构建。这是使用调试证书签名的测试版，正式发布前需配置自己的发布签名。不同云端构建可能使用不同调试证书，如提示签名冲突，需要先卸载旧测试版再安装。
+- Find likely AI apps among the apps with launcher icons. Known packages are marked **Confirmed**; keyword matches are marked **Suspected**.
+- Read a brand-specific eulogy, or tap **Another eulogy** for a different one.
+- Tap **Send it off** to open Android's uninstall flow. You approve the uninstall yourself.
+- System apps open their settings page so you can disable them where your phone allows it.
+- Wrong guess? Tap **Spare it**. Spared apps are saved locally and skipped in later scans.
 
-此版使用 `com.example.unprompted` 包名，与最初的“回到11.29”（`com.example.back1129`）作为两个独立应用共存。
+Detection uses local rules and can make mistakes. Review each match before uninstalling anything.
 
-## 用 Android Studio 编译
+### The unfollow list
 
-打开这个文件夹，等 Gradle 同步完，连上手机点运行。要求安卓 8.0 及以上。
+Find the familiar patterns: AI productivity gurus, prompt sellers, launch-day hype, and one-person-company sermons. Open a social app, unfollow accounts yourself, then return to record your progress.
 
-## 怎么认出 AI 软件
+The English list includes X, LinkedIn, Instagram, Threads, TikTok, YouTube, and Reddit. The Chinese list includes platforms such as Xiaohongshu, WeChat, Weibo, Douyin, and Bilibili. The app opens these platforms; it does not automate account actions.
 
-规则都在 `Detector.kt`，分三层：
+## Install
 
-1. 包名在已知清单里，标为“已确认”。
-2. 包名或 App 名里有某个品牌的关键词（qwen、grok、豆包、元宝……），标为“疑似”，并归到那个品牌，用那个品牌专属的悼词。
-3. App 名里有通用关键词（AI、GPT、Agent、智能体、大模型……），或包名里有 ai、gpt 这样的片段，也标为“疑似”。
+1. Download **[unprompted-v0.1.0-preview.apk](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-v0.1.0-preview.apk)** from the public release. No GitHub account or Android Studio is needed to download it.
+2. Open it on a phone running **Android 8.0 or later**.
+3. When Android asks, allow installation from the browser or file manager you used.
 
-除了各家聊天助手，也覆盖了 2026 年这一轮 personal agent：Meta 的 Muse、OpenClaw 和它的各种变种龙虾（QClaw、WorkBuddy、CoPaw，以及名字里带 Claw 的其他 App）、Hermes Agent，Gemini Spark、Microsoft Scout 这类住在已有 App 里的，则写进了对应品牌的悼词。
+This is a **debug-signed public preview**. If an earlier test build reports a signature conflict, uninstall that test build first. Uninstalling clears its local spared-app list and unfollow counter. It can coexist with the original “回到11.29” prototype because that prototype used a different package name.
 
-宽规则一定会误伤，比如叫 Gemini 的加密货币交易所、叫 Muse 的冥想 App、抓娃娃的 Claw 游戏。每张卡片上都有“放过它”，放过的 App 存在本机，以后扫描会跳过。
+The current application ID is `com.example.unprompted`. APK and video checksums are available in [SHA256SUMS.txt](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/SHA256SUMS.txt).
 
-App 能看见所有带桌面图标的应用，靠的是在 `AndroidManifest.xml` 里声明对桌面启动入口的查询，不需要 QUERY_ALL_PACKAGES 权限。
+## English and Chinese
 
-## 改断舍离清单
+The app follows your phone's system language: Chinese for `zh`, English otherwise. Switch the system language and reopen the app to try the other version.
 
-账号类型、关键词和平台都在 `Declutter.kt` 开头。平台的包名和“去哪里取关”的路径按公开信息整理，App 改版后可能变化。
+The eulogies, jokes, and unfollow lists were written separately for each language. They are not just word-for-word translations.
 
-## 改悼词
+## Local data
 
-悼词在 `EulogyZh.kt` 和 `EulogyEn.kt`：每个品牌有自己的几句（包括各家的梗，比如 Claude 的 You're absolutely right、Grok 的 @grok is this true），后面接一句身后事；另有一批通用模板和全行业通用的梗（9.11 和 9.9、strawberry 里的 r、骑自行车的鹈鹕、林黛玉倒拔垂杨柳……）。卡片上的“换一篇悼词”会依次轮换。它们故意不用大模型生成：送走 AI 的悼词，不该由 AI 来写。
+Scanning and eulogy selection happen on the device. The app does not request network access and has no account, analytics SDK, or model API. It stores only your spared-app choices and the unfollow counter in local preferences. Opening another app hands control to that app.
 
-## 发布前
+## Build without Android Studio
 
-把 `com.example.unprompted` 换成你自己的包名（`app/build.gradle.kts` 里的 `namespace` 和 `applicationId`，以及源码目录）。
+GitHub Actions builds a debug APK on pushes, pull requests, and manual runs.
 
-## 声明
+1. Fork the repository or push your changes to it.
+2. Open **Actions → Build APK**. To build manually, choose **Run workflow**.
+3. Open the successful run and download **unprompted-debug-apk** from **Artifacts**. Actions artifact downloads require a GitHub login.
+4. Extract `unprompted-debug.apk` from the ZIP. Artifacts are kept for 30 days; public release downloads are separate.
 
-本项目的初版代码由 Claude 编写。我们知道这很讽刺。
+The project includes the complete Gradle Wrapper. The cloud build uses Java 17, Gradle 8.7, Android SDK 34, and Build Tools 34.0.0.
 
-## English, briefly
+If you already have JDK 17 and an Android SDK installed, build locally with:
 
-Unprompted is an Android app that takes you back to November 29, 2022, the day before ChatGPT launched. It finds the AI apps on your phone, reads each one a eulogy, and opens Android’s uninstall prompt so you can send it off yourself. A second page lists the kinds of AI accounts worth unfollowing and opens X, LinkedIn, Instagram and the rest so you can do it by hand. When everything is gone, it asks you to uninstall it too.
+```sh
+./gradlew :app:assembleDebug
+```
+
+On Windows, use `gradlew.bat :app:assembleDebug`. The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+
+## Change the rules or the copy
+
+| File | What it controls |
+| --- | --- |
+| [`Detector.kt`](app/src/main/java/com/example/unprompted/Detector.kt) | Known packages, brand keywords, and broader AI detection rules |
+| [`EulogyZh.kt`](app/src/main/java/com/example/unprompted/EulogyZh.kt) / [`EulogyEn.kt`](app/src/main/java/com/example/unprompted/EulogyEn.kt) | Chinese and English eulogy templates |
+| [`Declutter.kt`](app/src/main/java/com/example/unprompted/Declutter.kt) | Platform links, account types, keywords, and milestones for each language |
+| [`values/strings.xml`](app/src/main/res/values/strings.xml) / [`values-zh/strings.xml`](app/src/main/res/values-zh/strings.xml) | English and Chinese interface text |
+
+## Acknowledgment
+
+The initial app code was written with Claude. Yes, we see the irony.
