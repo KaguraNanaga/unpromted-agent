@@ -21,7 +21,10 @@ data class Brand(
 
 enum class MatchKind { KNOWN, LIKELY }
 
-data class Match(val brandId: String?, val kind: MatchKind, val reason: String)
+/** 为什么认定它是 AI。界面按语言把它说成一句话。 */
+enum class Reason { KNOWN_PACKAGE, PACKAGE_HINT, LABEL_HINT }
+
+data class Match(val brandId: String?, val kind: MatchKind, val reason: Reason, val hint: String = "")
 
 object Detector {
 
@@ -71,24 +74,24 @@ object Detector {
         val pkg = packageName.lowercase()
 
         brands.firstOrNull { pkg in it.packages }?.let {
-            return Match(it.id, MatchKind.KNOWN, "在已知清单里")
+            return Match(it.id, MatchKind.KNOWN, Reason.KNOWN_PACKAGE)
         }
         for (b in brands) {
             b.packageHints.firstOrNull { pkg.contains(it) }?.let {
-                return Match(b.id, MatchKind.LIKELY, "包名里有「$it」")
+                return Match(b.id, MatchKind.LIKELY, Reason.PACKAGE_HINT, it)
             }
             b.labelHints.firstOrNull { labelHas(label, it) }?.let {
-                return Match(b.id, MatchKind.LIKELY, "名字里有「$it」")
+                return Match(b.id, MatchKind.LIKELY, Reason.LABEL_HINT, it)
             }
         }
         genericLabelHints.firstOrNull { labelHas(label, it) }?.let {
-            return Match(null, MatchKind.LIKELY, "名字里有「$it」")
+            return Match(null, MatchKind.LIKELY, Reason.LABEL_HINT, it)
         }
         val segments = pkg.split('.')
         genericPackageSegments.firstOrNull { hint ->
             segments.any { seg -> if (hint == "ai") seg == "ai" else seg.contains(hint) }
         }?.let {
-            return Match(null, MatchKind.LIKELY, "包名里有「$it」")
+            return Match(null, MatchKind.LIKELY, Reason.PACKAGE_HINT, it)
         }
         return null
     }

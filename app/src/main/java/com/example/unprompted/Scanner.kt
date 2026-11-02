@@ -15,9 +15,10 @@ data class FoundApp(
     val icon: ImageBitmap?,
     val brandId: String?,
     val kind: MatchKind,
-    val reason: String,
+    val reason: Reason,
+    val hint: String,
     val isSystem: Boolean,
-    val facts: Eulogy.Facts,
+    val facts: RawFacts,
 )
 
 object Scanner {
@@ -53,8 +54,9 @@ object Scanner {
                 brandId = match.brandId,
                 kind = match.kind,
                 reason = match.reason,
+                hint = match.hint,
                 isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0,
-                facts = Eulogy.facts(label, info.firstInstallTime, apkBytes),
+                facts = RawFacts(label, info.firstInstallTime, apkBytes),
             )
         }.sortedWith(compareBy({ it.kind != MatchKind.KNOWN }, { it.label }))
     }

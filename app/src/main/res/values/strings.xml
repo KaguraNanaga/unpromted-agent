@@ -1,4 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- English is the default. Chinese lives in values-zh. Use ’ instead of ' so nothing needs escaping. -->
 <resources>
     <string name="app_name">Unprompted</string>
+
+    <string name="tab_send_off">Send off apps</string>
+    <string name="tab_declutter">Unfollow list</string>
+
+    <string name="header_sub">On this day, ChatGPT hadn’t launched yet and AI hadn’t moved into your phone. That was %1$d days ago.</string>
+    <string name="header_tag">Unprompted takes you back.</string>
+
+    <string name="scan">Find the AI apps on this phone</string>
+    <plurals name="found">
+        <item quantity="one">Found %1$d. Tap “Send it off” and Android will ask whether to uninstall. You press OK yourself. Wrong guess? Tap “Spare it”.</item>
+        <item quantity="other">Found %1$d. Tap “Send it off” and Android will ask whether to uninstall. You press OK yourself. Wrong guess? Tap “Spare it”.</item>
+    </plurals>
+    <string name="tag_known">Confirmed</string>
+    <string name="tag_package_hint">Suspected: package name contains “%1$s”</string>
+    <string name="tag_label_hint">Suspected: name contains “%1$s”</string>
+    <string name="system_note">It came with your phone, so it can’t be uninstalled. The button below opens its settings page. Tap “Disable” there.</string>
+    <string name="btn_send_off">Send it off</string>
+    <string name="btn_disable">Disable in Settings</string>
+    <string name="btn_another">Another eulogy</string>
+    <string name="btn_spare">Spare it</string>
+    <string name="all_clear_none">No AI apps found. Maybe you never left 2022. If one slipped through, add its name in Detector.kt.</string>
+    <string name="all_clear_done">All gone. Your phone is back on November 29, 2022. Nobody will tell you “That’s a great question” today.</string>
+    <string name="departed_title">At rest</string>
+    <plurals name="spared">
+        <item quantity="one">You spared %1$d app. Scans will skip it.</item>
+        <item quantity="other">You spared %1$d apps. Scans will skip them.</item>
+    </plurals>
+    <string name="undo_all">Undo all</string>
+    <string name="send_me_off">Finally, send me off too</string>
+
+    <string name="declutter_title">The unfollow list</string>
+    <string name="declutter_intro">AI isn’t only on your phone. It also lives in the accounts you follow. Open the apps below, find these accounts, and unfollow them yourself.</string>
+    <string name="declutter_types">These can go</string>
+    <string name="declutter_keywords">Names or bios with these words usually qualify</string>
+    <string name="declutter_where">Where to unfollow</string>
+    <string name="open">Open</string>
+    <string name="not_installed">Not installed</string>
+    <plurals name="unfollowed">
+        <item quantity="one">Unfollowed %1$d by hand</item>
+        <item quantity="other">Unfollowed %1$d by hand</item>
+    </plurals>
+    <string name="unfollow_hint">Each time you unfollow one, come back and tap. Nobody checks. Honor system.</string>
+    <string name="btn_unfollowed_one">Unfollowed another</string>
+    <string name="reset">Reset</string>
 </resources>

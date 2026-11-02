@@ -1,4 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">人工不智能</string>
+
+    <string name="tab_send_off">送走 App</string>
+    <string name="tab_declutter">断舍离清单</string>
+
+    <string name="header_sub">这一天，ChatGPT 还没有发布，AI 还没有住进你的手机。距今已经 %1$d 天。</string>
+    <string name="header_tag">人工不智能，帮你回到那一天。</string>
+
+    <string name="scan">找出手机里的 AI 软件</string>
+    <plurals name="found">
+        <item quantity="other">找到 %1$d 个。按下“送走它”后，系统会问你是否卸载，确定要你亲手按。认错了的，点“放过它”。</item>
+    </plurals>
+    <string name="tag_known">已确认</string>
+    <string name="tag_package_hint">疑似：包名里有「%1$s」</string>
+    <string name="tag_label_hint">疑似：名字里有「%1$s」</string>
+    <string name="system_note">它是系统自带的，卸不掉。点下面的按钮会打开它的设置页，在那里点“停用”。</string>
+    <string name="btn_send_off">送走它</string>
+    <string name="btn_disable">去设置里停用</string>
+    <string name="btn_another">换一篇悼词</string>
+    <string name="btn_spare">放过它</string>
+    <string name="all_clear_none">一个 AI 软件都没找到。你可能本来就活在 2022 年。如果明明装了却没认出来，可以在 Detector.kt 里补上它的名字。</string>
+    <string name="all_clear_done">都送走了。你的手机回到了 2022 年 11 月 29 日。今天不会再有谁对你说“这是一个很好的问题”。</string>
+    <string name="departed_title">已安息</string>
+    <plurals name="spared">
+        <item quantity="other">你放过了 %1$d 个 App，扫描时会跳过它们。</item>
+    </plurals>
+    <string name="undo_all">全部撤销</string>
+    <string name="send_me_off">最后，把我也送走</string>
+
+    <string name="declutter_title">断舍离清单</string>
+    <string name="declutter_intro">AI 没装在你手机里，也会住在你的关注列表里。打开下面的 App，找到这些账号，亲手取关。</string>
+    <string name="declutter_types">这几类，可以走了</string>
+    <string name="declutter_keywords">名字或简介里有这些词的，多半是</string>
+    <string name="declutter_where">去哪里取关</string>
+    <string name="open">打开</string>
+    <string name="not_installed">没装</string>
+    <plurals name="unfollowed">
+        <item quantity="other">已亲手取关 %1$d 个</item>
+    </plurals>
+    <string name="unfollow_hint">每取关一个，回来点一下。没人检查，全凭良心。</string>
+    <string name="btn_unfollowed_one">又取关了一个</string>
+    <string name="reset">清零</string>
 </resources>

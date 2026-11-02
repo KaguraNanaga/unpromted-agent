@@ -50,7 +50,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -120,7 +122,7 @@ private fun App() {
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
-            Tabs(page, listOf("送走 App", "断舍离清单")) { page = it }
+            Tabs(page, listOf(stringResource(R.string.tab_send_off), stringResource(R.string.tab_declutter))) { page = it }
             Box(Modifier.weight(1f)) {
                 when (page) {
                     0 -> SendOffPage(
@@ -192,12 +194,12 @@ private fun SendOffPage(
                     ),
                     shape = RoundedCornerShape(4.dp),
                     modifier = Modifier.fillMaxWidth().height(52.dp),
-                ) { Text("找出手机里的 AI 软件", fontSize = 16.sp) }
+                ) { Text(stringResource(R.string.scan), fontSize = 16.sp) }
             }
         } else if (state.found.isNotEmpty()) {
             item {
                 Text(
-                    "找到 ${state.found.size} 个。按下“送走它”后，系统会问你是否卸载，确定要你亲手按。认错了的，点“放过它”。",
+                    context.resources.getQuantityString(R.plurals.found, state.found.size, state.found.size),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     lineHeight = 21.sp,
@@ -216,13 +218,13 @@ private fun SendOffPage(
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        "你放过了 ${state.pardonedCount} 个 App，扫描时会跳过它们。",
+                        context.resources.getQuantityString(R.plurals.spared, state.pardonedCount, state.pardonedCount),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         modifier = Modifier.weight(1f),
                     )
                     TextButton(onClick = onClearPardons) {
-                        Text("全部撤销", color = MaterialTheme.colorScheme.onBackground)
+                        Text(stringResource(R.string.undo_all), color = MaterialTheme.colorScheme.onBackground)
                     }
                 }
             }
@@ -240,7 +242,7 @@ private fun SendOffPage(
                     shape = RoundedCornerShape(4.dp),
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                 ) {
-                    Text("最后，把我也送走", color = MaterialTheme.colorScheme.onBackground, fontSize = 16.sp)
+                    Text(stringResource(R.string.send_me_off), color = MaterialTheme.colorScheme.onBackground, fontSize = 16.sp)
                 }
             }
         }
@@ -261,14 +263,14 @@ private fun Header() {
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            "这一天，ChatGPT 还没有发布，AI 还没有住进你的手机。距今已经 $days 天。",
+            stringResource(R.string.header_sub, days.toInt()),
             fontFamily = FontFamily.Serif,
             fontSize = 17.sp,
             lineHeight = 27.sp,
             color = MaterialTheme.colorScheme.onBackground,
         )
         Text(
-            "人工不智能，帮你回到那一天。",
+            stringResource(R.string.header_tag),
             fontFamily = FontFamily.Serif,
             fontSize = 17.sp,
             lineHeight = 27.sp,
@@ -280,9 +282,11 @@ private fun Header() {
 @Composable
 private fun EulogyCard(app: FoundApp, onSendOff: () -> Unit, onPardon: () -> Unit) {
     var variant by remember(app.packageName) { mutableIntStateOf(0) }
-    val tag = when {
-        app.kind == MatchKind.KNOWN -> "已确认"
-        else -> "疑似：${app.reason}"
+    val zh = LocalConfiguration.current.locales[0].language == "zh"
+    val tag = when (app.reason) {
+        Reason.KNOWN_PACKAGE -> stringResource(R.string.tag_known)
+        Reason.PACKAGE_HINT -> stringResource(R.string.tag_package_hint, app.hint)
+        Reason.LABEL_HINT -> stringResource(R.string.tag_label_hint, app.hint)
     }
 
     Surface(
@@ -315,7 +319,7 @@ private fun EulogyCard(app: FoundApp, onSendOff: () -> Unit, onPardon: () -> Uni
             }
             Spacer(Modifier.height(14.dp))
             Text(
-                Eulogy.write(app.packageName, app.brandId, app.facts, variant),
+                Eulogy.write(app.packageName, app.brandId, app.facts, variant, zh),
                 fontFamily = FontFamily.Serif,
                 fontSize = 16.sp,
                 lineHeight = 27.sp,
@@ -324,7 +328,7 @@ private fun EulogyCard(app: FoundApp, onSendOff: () -> Unit, onPardon: () -> Uni
             if (app.isSystem) {
                 Spacer(Modifier.height(10.dp))
                 Text(
-                    "它是系统自带的，卸不掉。点下面的按钮会打开它的设置页，在那里点“停用”。",
+                    stringResource(R.string.system_note),
                     fontSize = 13.sp,
                     lineHeight = 19.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -339,14 +343,14 @@ private fun EulogyCard(app: FoundApp, onSendOff: () -> Unit, onPardon: () -> Uni
                 ),
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text(if (app.isSystem) "去设置里停用" else "送走它", fontSize = 16.sp, fontWeight = FontWeight.Bold) }
+            ) { Text(stringResource(if (app.isSystem) R.string.btn_disable else R.string.btn_send_off), fontSize = 16.sp, fontWeight = FontWeight.Bold) }
             Row {
                 TextButton(onClick = { variant++ }) {
-                    Text("换一篇悼词", color = MaterialTheme.colorScheme.onSurface)
+                    Text(stringResource(R.string.btn_another), color = MaterialTheme.colorScheme.onSurface)
                 }
                 Spacer(Modifier.weight(1f))
                 TextButton(onClick = onPardon) {
-                    Text("放过它", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.btn_spare), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -355,11 +359,7 @@ private fun EulogyCard(app: FoundApp, onSendOff: () -> Unit, onPardon: () -> Uni
 
 @Composable
 private fun AllClear(nothingFoundAtAll: Boolean) {
-    val text = if (nothingFoundAtAll) {
-        "一个 AI 软件都没找到。你可能本来就活在 2022 年。如果明明装了却没认出来，可以在 Detector.kt 里补上它的名字。"
-    } else {
-        "都送走了。你的手机回到了 2022 年 11 月 29 日。今天不会再有谁对你说“这是一个很好的问题”。"
-    }
+    val text = stringResource(if (nothingFoundAtAll) R.string.all_clear_none else R.string.all_clear_done)
     Text(
         text,
         fontFamily = FontFamily.Serif,
@@ -373,7 +373,7 @@ private fun AllClear(nothingFoundAtAll: Boolean) {
 private fun Departed(names: List<String>) {
     Column(Modifier.fillMaxWidth()) {
         Text(
-            "已安息",
+            stringResource(R.string.departed_title),
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,

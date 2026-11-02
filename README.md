@@ -1,6 +1,12 @@
 # 人工不智能 Unprompted
 
-手机语言是中文时显示“人工不智能”，其他语言显示“Unprompted”（`res/values-zh` 和 `res/values` 里的 `app_name`）。
+手机语言是中文时是“人工不智能”，其他语言是英文版“Unprompted”。两个版本不是互相翻译的：悼词、梗和断舍离清单各写了一套。
+
+- 界面文字：`res/values/strings.xml`（英文，默认）和 `res/values-zh/strings.xml`（中文）
+- 悼词：`EulogyZh.kt`、`EulogyEn.kt`
+- 断舍离清单：`Declutter.kt` 里的 `zhCopy`、`enCopy`。英文版列的是 X、LinkedIn、Instagram、Threads、TikTok、YouTube、Reddit
+
+想看英文版，把手机系统语言切到英文再打开 App 就行。
 
 2022 年 11 月 30 日，ChatGPT 发布。这个安卓 App 帮你回到它发布的前一天：2022 年 11 月 29 日，AI 还没住进你手机的最后一天。
 
@@ -47,7 +53,7 @@ App 能看见所有带桌面图标的应用，靠的是在 `AndroidManifest.xml`
 
 ## 改悼词
 
-悼词在 `Eulogy.kt`：每个品牌有自己的几句（包括各家的梗，比如 Claude 的 You're absolutely right、Grok 的 @grok is this true），后面接一句身后事；另有一批通用模板和全行业通用的梗（9.11 和 9.9、strawberry 里的 r、骑自行车的鹈鹕、林黛玉倒拔垂杨柳……）。卡片上的“换一篇悼词”会依次轮换。它们故意不用大模型生成：送走 AI 的悼词，不该由 AI 来写。
+悼词在 `EulogyZh.kt` 和 `EulogyEn.kt`：每个品牌有自己的几句（包括各家的梗，比如 Claude 的 You're absolutely right、Grok 的 @grok is this true），后面接一句身后事；另有一批通用模板和全行业通用的梗（9.11 和 9.9、strawberry 里的 r、骑自行车的鹈鹕、林黛玉倒拔垂杨柳……）。卡片上的“换一篇悼词”会依次轮换。它们故意不用大模型生成：送走 AI 的悼词，不该由 AI 来写。
 
 ## 发布前
 
@@ -56,3 +62,7 @@ App 能看见所有带桌面图标的应用，靠的是在 `AndroidManifest.xml`
 ## 声明
 
 本项目的初版代码由 Claude 编写。我们知道这很讽刺。
+
+## English, briefly
+
+Unprompted is an Android app that takes you back to November 29, 2022, the day before ChatGPT launched. It finds the AI apps on your phone, reads each one a eulogy, and opens Android’s uninstall prompt so you can send it off yourself. A second page lists the kinds of AI accounts worth unfollowing and opens X, LinkedIn, Instagram and the rest so you can do it by hand. When everything is gone, it asks you to uninstall it too.
