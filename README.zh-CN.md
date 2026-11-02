@@ -12,7 +12,7 @@
 
 <a href="https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4"><img src="docs/assets/demo.gif" alt="人工不智能演示：扫描 AI 应用、切换悼词、查看断舍离清单" width="280"></a>
 
-[观看或下载 29 秒 MP4](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4)。演示使用中文界面，并配有英文说明。
+[观看或下载 29 秒 MP4](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4)。演示使用英文界面，并配有英文说明。
 
 ## 两个页面
 

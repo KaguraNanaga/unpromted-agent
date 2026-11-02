@@ -14,7 +14,7 @@ A small Android app for saying goodbye to the AI apps on your phone, one eulogy 
 
 <a href="https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4"><img src="docs/assets/demo.gif" alt="Unprompted demo: scanning AI apps, changing eulogies, and opening the unfollow list" width="280"></a>
 
-[29-second MP4](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4). The recording shows the Chinese interface with English captions. The app also includes a full English interface.
+[29-second MP4](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4). The recording shows the English interface with English captions. The app also includes a full Chinese interface.
 
 ## Two pages, one way back
 
