@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.back1129"
+    namespace = "com.example.unprompted"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.back1129"
+        applicationId = "com.example.unprompted"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

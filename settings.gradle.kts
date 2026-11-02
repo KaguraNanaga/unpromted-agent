@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Back1129"
+rootProject.name = "Unprompted"
 include(":app")

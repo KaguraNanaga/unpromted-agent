@@ -41,14 +41,14 @@ jobs:
           chmod +x gradlew
           ./gradlew :app:assembleDebug --no-daemon --stacktrace
           mkdir -p dist
-          cp app/build/outputs/apk/debug/app-debug.apk dist/back1129-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk dist/unprompted-debug.apk
 
       - name: Upload APK
         id: apk
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: back1129-debug-apk
-          path: dist/back1129-debug.apk
+          name: unprompted-debug-apk
+          path: dist/unprompted-debug.apk
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
@@ -59,4 +59,4 @@ jobs:
         run: |
           echo '### APK 构建成功' >> "$GITHUB_STEP_SUMMARY"
           echo "[下载测试版 APK]($APK_URL)" >> "$GITHUB_STEP_SUMMARY"
-          echo '下载后解压 ZIP，将 back1129-debug.apk 传到安卓 8.0 或更高版本的手机安装。' >> "$GITHUB_STEP_SUMMARY"
+          echo '下载后解压 ZIP，将 unprompted-debug.apk 传到安卓 8.0 或更高版本的手机安装。' >> "$GITHUB_STEP_SUMMARY"

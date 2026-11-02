@@ -4,25 +4,19 @@
     <!-- 允许调起系统的“卸载此应用”确认框。真正按下“确定”的永远是你自己。 -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
-    <!-- 安卓 11+ 的包可见性：只看得见这里列出的 App。和 AiApps.kt 保持一致。 -->
+    <!-- 安卓 11+ 的包可见性：声明“能看见所有带桌面图标的 App”。
+         这样不需要 QUERY_ALL_PACKAGES 这种敏感权限，也能扫描到清单之外的 AI 软件。 -->
     <queries>
-        <package android:name="com.openai.chatgpt" />
-        <package android:name="com.anthropic.claude" />
-        <package android:name="com.google.android.apps.bard" />
-        <package android:name="com.microsoft.copilot" />
-        <package android:name="ai.perplexity.app.android" />
-        <package android:name="ai.x.grok" />
-        <package android:name="ai.character.app" />
-        <package android:name="com.deepseek.chat" />
-        <package android:name="com.larus.nova" />
-        <package android:name="com.moonshot.kimichat" />
-        <package android:name="com.aliyun.tongyi" />
-        <package android:name="com.baidu.newapp" />
-        <package android:name="com.tencent.hunyuan.app.chat" />
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
     </queries>
 
     <application
-        android:label="回到11.29"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity
