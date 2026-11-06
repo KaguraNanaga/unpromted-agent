@@ -1,0 +1,50 @@
+name: 🕯️ Submit a eulogy / 投稿悼词
+description: Write a eulogy for an AI app or agent. 给一个 AI 产品写一篇悼词。
+title: "Eulogy: "
+labels: ["eulogy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us send AIs on vacation. 谢谢你帮忙送 AI 去放假。
+
+        Eulogies are for AI products only, never real people. Keep it playful, not cruel.
+        悼词只写给 AI 产品，不写给真实的人。好玩，但不刻薄。
+  - type: input
+    id: ai
+    attributes:
+      label: Which AI? / 写给哪个 AI？
+      placeholder: e.g. Muse, Claude Duet, 豆包
+    validations:
+      required: true
+  - type: dropdown
+    id: lang
+    attributes:
+      label: Language / 语言
+      options:
+        - English
+        - 中文
+    validations:
+      required: true
+  - type: textarea
+    id: eulogy
+    attributes:
+      label: The eulogy / 悼词
+      description: One to three sentences works best. 一到三句话最好。
+      placeholder: It booked you a lot of hotels and never stayed in one. Today we booked it one.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source for any facts / 事实出处
+      description: If the joke refers to something that really happened, link to it. 如果梗里提到了真实发生的事，请附上链接。
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Before you submit / 提交前
+      options:
+        - label: It’s about an AI product, not a real person. 写的是 AI 产品，不是真实的人。
+          required: true
+        - label: I wrote it myself, not a model. 是我自己写的，不是模型生成的。
+          required: false

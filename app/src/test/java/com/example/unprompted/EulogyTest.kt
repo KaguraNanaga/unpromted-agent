@@ -25,7 +25,7 @@ class EulogyTest {
         val english = (0 until 80).map { Eulogy.write("com.openai.chatgpt", "chatgpt", facts, it, false) }
         val chinese = (0 until 80).map { Eulogy.write("com.openai.chatgpt", "chatgpt", facts, it, true) }
         assertTrue(english.any { it.contains("permanent vacation, no checkout") })
-        assertTrue(chinese.any { it.contains("永久休假，不用退房") })
+        assertTrue(chinese.any { it.contains("永久休假的屋子") })
     }
 
     @Test

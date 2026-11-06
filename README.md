@@ -1,102 +1,193 @@
-[中文说明](README.zh-CN.md)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/banner-dark.svg">
+    <img src="docs/assets/banner.svg" alt="2022.11.29. Personal agents suck. Unprompted, 人工不智能." width="100%">
+  </picture>
+</p>
 
-# Unprompted Agent
+<p align="center">
+  <a href="README.zh-CN.md">中文说明</a>
+</p>
 
-**Back to November 29, 2022.**
+<p align="center">
+  <img alt="personal agents: suck" src="https://img.shields.io/badge/personal%20agents-suck-000000?style=for-the-badge">
+  <img alt="hotels booked: 0" src="https://img.shields.io/badge/hotels%20booked-0-E2B007?style=for-the-badge">
+  <img alt="emails sent for you: 0" src="https://img.shields.io/badge/emails%20sent%20for%20you-0-E2B007?style=for-the-badge">
+  <br>
+  <img alt="network permission: none" src="https://img.shields.io/badge/network%20permission-none-2ea44f">
+  <img alt="root: not needed" src="https://img.shields.io/badge/root-not%20needed-2ea44f">
+  <img alt="Android 8.0+" src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?logo=android&amp;logoColor=white">
+  <img alt="iPhone: use the web app" src="https://img.shields.io/badge/iPhone-use%20the%20web%20app-555555?logo=apple">
+  <img alt="built with Claude (we know)" src="https://img.shields.io/badge/built%20with-Claude%20(we%20know)-D97757">
+  <a href="https://github.com/KaguraNanaga/unprompted-agent/actions/workflows/build.yml"><img alt="Build APK" src="https://github.com/KaguraNanaga/unprompted-agent/actions/workflows/build.yml/badge.svg"></a>
+</p>
 
-A small Android app for saying goodbye to the AI apps on your phone, one eulogy at a time. Then clean up the AI hype in your social feeds, by hand.
+<h3 align="center">
+  <a href="https://kagurananaga.github.io/unprompted-agent/">🌼 Try the web app</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/KaguraNanaga/unprompted-agent/releases/download/v0.2.1/unprompted-v0.2.1-preview.apk">📦 Download the APK</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/KaguraNanaga/unprompted-agent/issues/new?template=eulogy.yml">🕯️ Submit a eulogy</a>
+</h3>
 
-[![Build APK](https://github.com/KaguraNanaga/unpromted-agent/actions/workflows/build.yml/badge.svg)](https://github.com/KaguraNanaga/unpromted-agent/actions/workflows/build.yml)
+---
 
-**[Try the web app](https://kagurananaga.github.io/unpromted-agent/)** · **[Download the bilingual APK](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/unprompted-v0.2.0-preview.apk)** · [Release notes](https://github.com/KaguraNanaga/unpromted-agent/releases/tag/v0.2.0) · [Report an issue](https://github.com/KaguraNanaga/unpromted-agent/issues)
+Everyone is building a personal agent. It books your hotels, answers your email, compares prices across thirty sites, and sends you a briefing every morning.
 
-## New in v0.2.0
+Most of us book maybe three hotels a year.
 
-- Ten more brand rules, including Claude Duet, Grok Bot, Alexa, Opera Neon, Hark, Lindy, Poke, Genspark, Devin, and nanobot.
-- Fourteen shared agent eulogies in each language, plus new brand-specific lines and an agent-reviewer category in the unfollow list.
-- A **[web eulogy generator](https://kagurananaga.github.io/unpromted-agent/)** for iPhone, desktop, and anyone who wants to try it without installing an APK.
+**Unprompted is the opposite of a personal agent.** It finds the AI apps on your phone, reads each one a eulogy, and hands you the uninstall button. Then it helps you unfollow the accounts telling you you’re falling behind. When everything is gone, it asks you to uninstall it too.
 
-## Try it in your browser
+It doesn’t do anything for you. That’s the feature.
 
-Open **[the web app](https://kagurananaga.github.io/unpromted-agent/)**, choose an AI or type its name, optionally enter when you first used it, then generate a card. Switch between English and Chinese, save the card as a PNG, or open a prefilled post on X.
+## 🌼 Recently laid to rest
 
-You can also import an exported bookmarks HTML file to find AI websites and create cards for them. The file is read in your browser and is not uploaded. The web app works with manual choices and bookmarks; phone app scanning is available in the Android app.
+<p align="center">
+  <img src="docs/assets/card-en-claude.svg" width="32%" alt="Claude: “You’re absolutely right!” It said that a lot. Today it’s absolutely right about one thing: it’s time to go.">
+  <img src="docs/assets/card-en-grok.svg" width="32%" alt="Grok: Every time the internet had an argument, someone summoned it: “@grok is this true?” Yes. It’s gone.">
+  <img src="docs/assets/card-en-agent.svg" width="32%" alt="Your agent: It booked you a lot of hotels and never stayed in one. Today we booked it one: permanent vacation, no checkout.">
+</p>
 
-## See it in action
+A few more from the collection:
 
-<a href="https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4"><img src="docs/assets/demo.gif" alt="Unprompted demo: scanning AI apps, changing eulogies, and opening the unfollow list" width="280"></a>
+> **OpenClaw.** It was a lobster that grew claws to do your chores. Tonight: butter and lemon.
+>
+> **Claude Duet.** Its name was Duet. Today, you go solo.
+>
+> **Dots.** It was a team of little dots working in the background around the clock. Today it ends with one more dot: a period.
+>
+> **Any agent.** It answered a hundred emails for you, ninety of which never needed an answer. Today its auto-reply says: Out of office. Indefinitely.
+>
+> **Any model.** You asked it which is bigger, 9.11 or 9.9. It thought hard and said 9.11. From now on, you do the math.
 
-[29-second MP4](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-demo.mp4). The recording shows the English interface with English captions. The app also includes a full Chinese interface.
+Every eulogy is written by a human. None of them are generated by a model, because a eulogy for an AI shouldn’t be written by one.
 
-## Two pages, one way back
+## 🆚 Your personal agent vs. Unprompted
 
-### Send off apps
+| | A personal agent | Unprompted |
+|---|---|---|
+| 🏨 Hotels | Books ones you’ll never stay at | Suggests going outside |
+| 📧 Email | Answers ninety that didn’t need it | Lets them wait |
+| 🛒 Shopping | Watches a jacket for a price drop for three months | Notes that you never bought the jacket |
+| ☁️ Where it runs | Its own cloud computer, 24/7 | Your phone, only while it’s open. No network permission at all |
+| 🧠 What it remembers | Everything about you, forever | Two things: apps you spared and how many accounts you unfollowed |
+| ✅ “Approve?” | Before every purchase | Once, before you uninstall it |
+| 💸 Price | $20 to $200 a month | Free. Uninstalling is also free |
 
-- Find likely AI apps among the apps with launcher icons. Known packages are marked **Confirmed**; keyword matches are marked **Suspected**.
-- Read a brand-specific eulogy, or tap **Another eulogy** for a different one.
-- Tap **Send it off** to open Android's uninstall flow. You approve the uninstall yourself.
-- System apps open their settings page so you can disable them where your phone allows it.
-- Wrong guess? Tap **Spare it**. Spared apps are saved locally and skipped in later scans.
+## 🎬 See it in action
 
-Detection uses local rules and can make mistakes. Review each match before uninstalling anything.
+<p align="center">
+  <a href="https://github.com/KaguraNanaga/unprompted-agent/releases/download/v0.1.0/unprompted-demo.mp4">
+    <img src="docs/assets/demo.gif" alt="Unprompted demo: scanning AI apps, changing eulogies, and opening the unfollow list" width="320">
+  </a>
+  <br>
+  <sub><a href="https://github.com/KaguraNanaga/unprompted-agent/releases/download/v0.1.0/unprompted-demo.mp4">29-second MP4</a>, English interface. The app has a full Chinese interface too.</sub>
+</p>
 
-### The unfollow list
+## ⚰️ What it does
 
-Find the familiar patterns: AI productivity gurus, prompt sellers, launch-day hype, and one-person-company sermons. Open a social app, unfollow accounts yourself, then return to record your progress.
+**🔍 Send off apps.** Scans the apps with launcher icons for anything that looks like AI: ChatGPT, Claude, Gemini, Grok, DeepSeek, Muse, Claude Duet, Grok Bot, Hark, Manus, and every lobster you adopted this spring. Each one gets a brand-specific eulogy. Tap **Send it off** and Android asks whether to uninstall. You press OK yourself. Wrong guess? Tap **Spare it**.
 
-The English list includes X, LinkedIn, Instagram, Threads, TikTok, YouTube, and Reddit. The Chinese list includes platforms such as Xiaohongshu, WeChat, Weibo, Douyin, and Bilibili. The app opens these platforms; it does not automate account actions.
+**✂️ The unfollow list.** AI isn’t only on your phone; it also lives in the accounts you follow. The list covers the usual suspects: thread guys, prompt dealers, the launch-day echo chamber, and agent reviewers who asked five agents to book the same hotel. It opens X, LinkedIn, Instagram, Threads, TikTok, YouTube or Reddit, and you unfollow by hand. A counter keeps score on the honor system.
 
-## Install
+**🌐 The web app.** For iPhone, desktop, or anyone who’d rather not install an APK. Pick an AI, get a eulogy card, save it as a PNG or post it to X. The picker is split into the chatty ones and the ones that do things for you, which have earned a vacation.
 
-1. Download **[unprompted-v0.2.0-preview.apk](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/unprompted-v0.2.0-preview.apk)** from the public release. No GitHub account or Android Studio is needed to download it.
+**📚 The bookmark memorial.** Drop an exported bookmarks file into the web app and it digs out every AI site you ever saved, with the date you first saved it. Then it holds a group funeral. The file is read in your browser and never uploaded.
+
+**👋 The ending.** When every AI is gone, the last button reads **Finally, send me off too**.
+
+## ❓ FAQ
+
+<details>
+<summary><b>Is there an iPhone version?</b></summary>
+<br>
+No, and there can’t be. iOS doesn’t let any app see which apps you have installed, so nothing can scan for you. On an iPhone, <a href="https://kagurananaga.github.io/unprompted-agent/">the web app</a> is the way in.
+</details>
+
+<details>
+<summary><b>Will it really delete my apps?</b></summary>
+<br>
+It opens Android’s own uninstall prompt. Nothing is removed until you confirm. Apps that came with your phone open their settings page instead, where you can disable them if your phone allows it.
+</details>
+
+<details>
+<summary><b>Does it upload anything?</b></summary>
+<br>
+No. The app doesn’t request network access and has no account, analytics or model API. The web app reads your bookmarks file in your browser and doesn’t send it anywhere.
+</details>
+
+<details>
+<summary><b>Do personal agents really suck?</b></summary>
+<br>
+It’s a joke. They’re impressive, and some people genuinely need them. Most of us just don’t book a hotel every day. So instead of firing them, we’re sending them on a long vacation.
+</details>
+
+<details>
+<summary><b>Wasn’t this built with AI?</b></summary>
+<br>
+Yes. The initial code was written with Claude. We see the irony. Claude got a eulogy too.
+</details>
+
+<details>
+<summary><b>Can I write a eulogy?</b></summary>
+<br>
+Please do. <a href="https://github.com/KaguraNanaga/unprompted-agent/issues/new?template=eulogy.yml">Open a eulogy issue</a>, or send a pull request to <code>EulogyEn.kt</code> or <code>EulogyZh.kt</code>. Eulogies are for AI products only, not real people.
+</details>
+
+## 📦 Install
+
+1. Download [**unprompted-v0.2.1-preview.apk**](https://github.com/KaguraNanaga/unprompted-agent/releases/download/v0.2.1/unprompted-v0.2.1-preview.apk). No GitHub account needed.
 2. Open it on a phone running **Android 8.0 or later**.
-3. When Android asks, allow installation from the browser or file manager you used.
+3. When Android asks, allow installs from the browser or file manager you used.
 
-This is a **debug-signed public preview**. If an earlier test build reports a signature conflict, uninstall that test build first. Uninstalling clears its local spared-app list and unfollow counter. It can coexist with the original “回到11.29” prototype because that prototype used a different package name.
+<details>
+<summary>Preview build notes</summary>
+<br>
 
-The current application ID is `com.example.unprompted`. APK checksums are available in [SHA256SUMS.txt](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/SHA256SUMS.txt).
+This is a **debug-signed public preview**. If an earlier test build reports a signature conflict, uninstall that build first; this clears its spared-app list and unfollow counter. It can coexist with the original “回到11.29” prototype, which used a different package name.
 
-## English and Chinese
+The application ID is `com.example.unprompted`. Checksums are in [SHA256SUMS.txt](https://github.com/KaguraNanaga/unprompted-agent/releases/download/v0.2.1/SHA256SUMS.txt).
 
-The app follows your phone's system language: Chinese for `zh`, English otherwise. Switch the system language and reopen the app to try the other version.
+The app follows your phone’s system language: Chinese for `zh`, English otherwise. The eulogies, jokes and unfollow lists were written separately for each language rather than translated.
+</details>
 
-The eulogies, jokes, and unfollow lists were written separately for each language. They are not just word-for-word translations.
+<details>
+<summary>Build it yourself</summary>
+<br>
 
-## Local data
+**Without Android Studio.** GitHub Actions builds a debug APK on pushes, pull requests and manual runs. Fork the repo, open **Actions → Build APK**, choose **Run workflow**, then download **unprompted-debug-apk** from the run’s **Artifacts** (requires a GitHub login; kept for 30 days). The cloud build uses Java 17, Gradle 8.7, Android SDK 34 and Build Tools 34.0.0.
 
-Scanning and eulogy selection happen on the device. The app does not request network access and has no account, analytics SDK, or model API. It stores only your spared-app choices and the unfollow counter in local preferences. Opening another app hands control to that app.
+**Locally,** with JDK 17 and an Android SDK installed:
 
-## Build without Android Studio
-
-GitHub Actions builds a debug APK on pushes, pull requests, and manual runs.
-
-1. Fork the repository or push your changes to it.
-2. Open **Actions → Build APK**. To build manually, choose **Run workflow**.
-3. Open the successful run and download **unprompted-debug-apk** from **Artifacts**. Actions artifact downloads require a GitHub login.
-4. Extract `unprompted-debug.apk` from the ZIP. Artifacts are kept for 30 days; public release downloads are separate.
-
-The project includes the complete Gradle Wrapper. The cloud build uses Java 17, Gradle 8.7, Android SDK 34, and Build Tools 34.0.0.
-
-If you already have JDK 17 and an Android SDK installed, build locally with:
-
-```sh
+```bash
 ./gradlew :app:assembleDebug
 ```
 
-On Windows, use `gradlew.bat :app:assembleDebug`. The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+On Windows, use `gradlew.bat :app:assembleDebug`. The APK lands in `app/build/outputs/apk/debug/app-debug.apk`.
 
-The web app is published from `docs/` using GitHub Pages; edits to `docs/index.html` deploy from `main`.
+The web app is served from `docs/` by GitHub Pages; edits to `docs/index.html` deploy from `main`.
+</details>
 
-## Change the rules or the copy
+<details>
+<summary>Change the rules or the copy</summary>
+<br>
 
 | File | What it controls |
-| --- | --- |
-| [`docs/index.html`](docs/index.html) | Browser generator, bookmark import, and PNG export |
-| [`Detector.kt`](app/src/main/java/com/example/unprompted/Detector.kt) | Known packages, brand keywords, and broader AI detection rules |
-| [`EulogyZh.kt`](app/src/main/java/com/example/unprompted/EulogyZh.kt) / [`EulogyEn.kt`](app/src/main/java/com/example/unprompted/EulogyEn.kt) | Chinese and English eulogy templates |
-| [`Declutter.kt`](app/src/main/java/com/example/unprompted/Declutter.kt) | Platform links, account types, keywords, and milestones for each language |
+|---|---|
+| [`docs/index.html`](docs/index.html) | Web generator, bookmark import, PNG export, name blocklist |
+| [`Detector.kt`](app/src/main/java/com/example/unprompted/Detector.kt) | Known packages, brand keywords, broader AI detection rules |
+| [`EulogyZh.kt`](app/src/main/java/com/example/unprompted/EulogyZh.kt) / [`EulogyEn.kt`](app/src/main/java/com/example/unprompted/EulogyEn.kt) | Chinese and English eulogies, including the shared agent lines |
+| [`Declutter.kt`](app/src/main/java/com/example/unprompted/Declutter.kt) | Platforms, account types, keywords and milestones for each language |
 | [`values/strings.xml`](app/src/main/res/values/strings.xml) / [`values-zh/strings.xml`](app/src/main/res/values-zh/strings.xml) | English and Chinese interface text |
+</details>
 
-## Acknowledgment
+## ⚖️ Fine print
 
-The initial app code was written with Claude. Yes, we see the irony.
+Eulogies are assembled from prewritten templates, for fun only. They are not aimed at any real person and are not a review of any product or company. Detection uses local rules and can be wrong, so look before you uninstall. Product names and trademarks belong to their respective owners.
+
+<p align="center">
+  <br>
+  <img src="https://img.shields.io/badge/-take%20the%20day%20off-E2B007?style=for-the-badge" alt="take the day off">
+  <br><br>
+  <sub>Made by a human, with an AI, to send AIs on vacation. 🌼</sub>
+</p>
