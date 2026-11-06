@@ -29,6 +29,9 @@ data class Match(val brandId: String?, val kind: MatchKind, val reason: Reason, 
 object Detector {
 
     val brands: List<Brand> = listOf(
+        // 名字里带母品牌的新 agent，要排在母品牌前面，才不会被认成 Claude、Grok
+        Brand("duet", "Claude Duet", emptyList(), emptyList(), listOf("Claude Duet")),
+        Brand("grokbot", "Grok Bot", emptyList(), emptyList(), listOf("Grok Bot", "GrokBot")),
         Brand("chatgpt", "ChatGPT", listOf("com.openai.chatgpt"), listOf("openai"), listOf("ChatGPT", "OpenAI")),
         Brand("claude", "Claude", listOf("com.anthropic.claude"), listOf("anthropic"), listOf("Claude")),
         Brand("gemini", "Gemini", listOf("com.google.android.apps.bard"), listOf("apps.bard"), listOf("Gemini")),
@@ -50,6 +53,14 @@ object Detector {
         Brand("copaw", "CoPaw", emptyList(), listOf("copaw"), listOf("CoPaw")),
         // 其余各种名字里带 Claw 的变种龙虾，放在具体品牌后面兜底
         Brand("claw", "龙虾", emptyList(), listOf("claw"), listOf("Claw")),
+        Brand("alexa", "Alexa", emptyList(), listOf("amazon.dee"), listOf("Alexa")),
+        Brand("neon", "Opera Neon", emptyList(), listOf("opera.neon"), listOf("Opera Neon")),
+        Brand("hark", "Hark", emptyList(), listOf("hark"), listOf("Hark")),
+        Brand("lindy", "Lindy", emptyList(), listOf("lindy"), listOf("Lindy")),
+        Brand("poke", "Poke", emptyList(), emptyList(), listOf("Poke")),
+        Brand("genspark", "Genspark", emptyList(), listOf("genspark"), listOf("Genspark")),
+        Brand("devin", "Devin", emptyList(), listOf("cognition"), listOf("Devin")),
+        Brand("nanobot", "nanobot", emptyList(), listOf("nanobot"), listOf("nanobot")),
         Brand("deepseek", "DeepSeek", listOf("com.deepseek.chat"), listOf("deepseek"), listOf("DeepSeek", "深度求索")),
         Brand("doubao", "豆包", listOf("com.larus.nova"), listOf("doubao", "larus.nova"), listOf("豆包", "Doubao")),
         Brand("kimi", "Kimi", listOf("com.moonshot.kimichat"), listOf("moonshot", "kimi"), listOf("Kimi", "月之暗面")),
@@ -99,7 +110,7 @@ object Detector {
     fun brandName(id: String?): String? = brands.firstOrNull { it.id == id }?.name
 
     /** 这些词容易是别的单词的开头（Manuscript、Poetry……），要求整词出现 */
-    private val wholeWordOnly = setOf("AI", "LLM", "Poe", "Manus", "Mika", "Claude", "Kimi", "Muse")
+    private val wholeWordOnly = setOf("AI", "LLM", "Poe", "Manus", "Mika", "Claude", "Kimi", "Muse", "Alexa", "Lindy", "Poke", "Devin", "Hark")
 
     /** 出现在单词中间也算：ChatGPT、MyGPT、ArkClaw、NemoClaw…… */
     private val matchAnywhere = setOf("GPT", "Claw")

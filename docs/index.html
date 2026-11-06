@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 悼词生成器 · 人工不智能</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Source+Serif+4:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E9EAE8;
+    --card: #FFFFFF;
+    --ink: #000000;
+    --muted: #5E605D;
+    --line: #000000;
+    --mum: #E2B007;
+    --on-mum: #000000;
+    --chip: transparent;
+    --chip-on: #000000;
+    --chip-on-ink: #FFFFFF;
+    --serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000000; --card: #151615; --ink: #EDEEEC; --muted: #9A9C98; --line: #6A6C68;
+      --chip-on: #EDEEEC; --chip-on-ink: #000000; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #000000; --card: #151615; --ink: #EDEEEC; --muted: #9A9C98; --line: #6A6C68;
+    --chip-on: #EDEEEC; --chip-on-ink: #000000; color-scheme: dark;
+  }
+  /* 英文先用拉丁衬线体。中文字体会把 “ ” ’ 排成全角，看起来像中文标点。 */
+  html[lang="en"] { --serif: "Source Serif 4", Georgia, "Times New Roman", "Noto Serif SC", serif; }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 560px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .date { font-family: var(--serif); font-weight: 900; font-size: clamp(40px, 11vw, 56px); line-height: 1; margin: 0; letter-spacing: -0.01em; }
+  .lang { font: 600 14px var(--sans); color: var(--ink); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; }
+  .lead { font-family: var(--serif); font-size: 17px; line-height: 1.65; margin: 12px 0 28px; max-width: 32em; }
+
+  /* 讣告卡：这一页唯一大胆的东西 */
+  .card {
+    background: var(--card); border: 2px solid var(--line); border-radius: 4px;
+    padding: 36px 28px 26px; text-align: center;
+  }
+  .flower { width: 92px; height: 92px; display: block; margin: 0 auto 18px; }
+  .in-memory { font-family: var(--serif); font-size: 15px; color: var(--muted); margin: 0; }
+  .name { font-family: var(--serif); font-weight: 900; font-size: clamp(40px, 12vw, 64px); line-height: 1.1; margin: 8px 0 6px; overflow-wrap: anywhere; }
+  .span { font-family: var(--serif); font-size: 15px; color: var(--muted); margin: 0 0 22px; font-variant-numeric: tabular-nums; }
+  .text { font-family: var(--serif); font-size: 18px; line-height: 1.85; margin: 0 auto; max-width: 26em; min-height: 5.5em; }
+  .sign { font-family: var(--serif); font-size: 13px; color: var(--muted); margin: 26px 0 0; }
+
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 34px; }
+  .btn { font: 700 16px var(--sans); border-radius: 4px; padding: 13px 12px; cursor: pointer; text-align: center; text-decoration: none; }
+  .btn-primary { grid-column: 1 / -1; background: var(--mum); color: var(--on-mum); border: 0; }
+  .btn-plain { background: none; color: var(--ink); border: 1px solid var(--line); }
+
+  h2 { font-family: var(--serif); font-size: 19px; margin: 0 0 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .group { flex-basis: 100%; font-size: 14px; color: var(--muted); margin: 6px 0 0; }
+  .chip { font: 500 15px var(--sans); color: var(--ink); background: var(--chip); border: 1px solid var(--line); border-radius: 4px; padding: 7px 11px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
+  label { display: block; font-size: 14px; color: var(--muted); margin: 0 0 6px; }
+  input[type="text"], input[type="date"] {
+    width: 100%; font: 16px var(--sans); color: var(--ink); background: var(--card);
+    border: 1px solid var(--line); border-radius: 4px; padding: 11px 12px; margin-bottom: 16px;
+  }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--mum); outline-offset: 2px; }
+
+  .hint { font-size: 14px; color: var(--ink); margin: -8px 0 16px; }
+  .note { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 0 0 12px; }
+  .import { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .drop {
+    display: block; border: 1px dashed var(--line); border-radius: 4px; padding: 22px 16px;
+    text-align: center; font: 600 15px var(--sans); color: var(--ink); cursor: pointer; margin: 0 0 12px;
+  }
+  .drop.over { border-style: solid; outline: 3px solid var(--mum); }
+  .summary { font-family: var(--serif); font-size: 18px; line-height: 1.7; margin: 18px 0 14px; }
+  .mini { border-top: 1px solid var(--line); padding: 14px 0; }
+  .mini-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .mini-name { font-family: var(--serif); font-weight: 700; font-size: 19px; overflow-wrap: anywhere; }
+  .mini-meta { font-size: 13px; color: var(--muted); margin: 2px 0 6px; font-variant-numeric: tabular-nums; }
+  .mini-text { font-family: var(--serif); font-size: 15px; line-height: 1.75; margin: 0 0 8px; }
+  .mini-btn { font: 600 14px var(--sans); color: var(--ink); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; white-space: nowrap; }
+  .disclaimer { margin-top: 36px; font-size: 12px; line-height: 1.7; color: var(--muted); }
+  .foot { margin-top: 30px; font-size: 14px; line-height: 1.7; color: var(--muted); }
+  .foot a { color: var(--ink); }
+
+  .sheet { position: fixed; inset: 0; background: rgba(0,0,0,.82); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 20; }
+  .sheet.open { display: flex; }
+  .sheet-inner { max-width: 420px; width: 100%; text-align: center; color: #fff; }
+  .sheet img { width: 100%; height: auto; border-radius: 4px; display: block; }
+  .sheet p { font-size: 15px; margin: 14px 0; }
+  .sheet .btn-plain { color: #fff; border-color: #fff; display: inline-block; padding: 10px 18px; }
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); font-size: 14px; padding: 10px 14px; border-radius: 4px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <h1 class="date">2022.11.29</h1>
+    <button class="lang" id="lang" type="button">EN</button>
+  </div>
+  <p class="lead" id="lead"></p>
+
+  <section class="card" id="card" aria-live="polite">
+    <svg class="flower" id="flower" viewBox="0 0 108 108" aria-hidden="true"></svg>
+    <p class="in-memory" id="inMemory"></p>
+    <p class="name" id="name"></p>
+    <p class="span" id="span"></p>
+    <p class="text" id="text"></p>
+    <p class="sign" id="sign"></p>
+  </section>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="again" type="button"></button>
+    <button class="btn btn-plain" id="save" type="button"></button>
+    <a class="btn btn-plain" id="share" target="_blank" rel="noopener"></a>
+  </div>
+
+  <h2 id="pickTitle"></h2>
+  <p class="note" id="iosNote" hidden></p>
+  <div class="chips" id="chips"></div>
+  <label for="custom" id="customLabel"></label>
+  <input type="text" id="custom" maxlength="24" autocomplete="off">
+  <p class="hint" id="customHint" hidden></p>
+  <label for="born" id="bornLabel"></label>
+  <input type="date" id="born">
+
+  <section class="import" id="import">
+    <h2 id="importTitle"></h2>
+    <p class="note" id="importHow"></p>
+    <label class="drop" id="drop" for="bm"><span id="dropText"></span></label>
+    <input type="file" id="bm" accept=".html,.htm,text/html" hidden>
+    <p class="note" id="importPrivacy"></p>
+    <div id="importResult"></div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+  <p class="disclaimer" id="disclaimer"></p>
+</main>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheet-inner">
+    <img id="sheetImg" alt="">
+    <p id="sheetHint"></p>
+    <button class="btn btn-plain" id="sheetClose" type="button"></button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* 改成你的仓库地址，页脚和分享文案里就会带上链接 */
+const GITHUB_URL = "https://github.com/KaguraNanaga/unpromted-agent";
+const HAS_REPO = !GITHUB_URL.includes("YOUR_NAME");
+
+/* ---------- 菊花：和 App 图标同一朵 ---------- */
+const FLOWER = {
+  rings: [
+    { n: 24, path: "M51.5,35 a2.5,11 0 1,0 5.0,0 a2.5,11 0 1,0 -5.0,0 z", color: "#E2B007", start: 0 },
+    { n: 18, path: "M51.9,42 a2.1,7 0 1,0 4.2,0 a2.1,7 0 1,0 -4.2,0 z", color: "#F4CF4A", start: 10 },
+  ],
+  center: "M48.4,54 a5.6,5.6 0 1,0 11.2,0 a5.6,5.6 0 1,0 -11.2,0 z",
+  centerColor: "#8A6500",
+};
+(function drawFlowerSvg() {
+  const svg = document.getElementById("flower");
+  const ns = "http://www.w3.org/2000/svg";
+  for (const r of FLOWER.rings) {
+    for (let i = 0; i < r.n; i++) {
+      const p = document.createElementNS(ns, "path");
+      p.setAttribute("d", r.path);
+      p.setAttribute("fill", r.color);
+      p.setAttribute("transform", `rotate(${r.start + i * 360 / r.n} 54 54)`);
+      svg.appendChild(p);
+    }
+  }
+  const c = document.createElementNS(ns, "path");
+  c.setAttribute("d", FLOWER.center);
+  c.setAttribute("fill", FLOWER.centerColor);
+  svg.appendChild(c);
+})();
+
+/* ---------- 文案 ---------- */
+const UI = {
+  zh: {
+    lang: "EN",
+    lead: "这一天，ChatGPT 还没有发布，AI 还没有住进你的手机。选一个 AI，给它念一段悼词。",
+    inMemory: "沉痛悼念",
+    unknownBorn: "生年不详",
+    again: "换一篇悼词",
+    save: "保存图片",
+    share: "分享到 X",
+    pick: "送走哪一个",
+    custom: "或者自己填一个名字",
+    customPh: "比如：公司内部那个 AI",
+    born: "你第一次用它是哪天（可选）",
+    sign: "人工不智能 · Unprompted",
+    foot: "手机上的 AI，可以用安卓 App「人工不智能」一个个送走：扫描、念悼词、亲手卸载。",
+    footRepo: "在 GitHub 上看看",
+    sheetHint: "长按图片保存，电脑上右键另存为。",
+    sheetClose: "关闭",
+    saved: "已保存",
+    shareText: (name, text) => `我给 ${name} 写了一篇悼词：\n\n${text}\n\n#人工不智能`,
+    blocked: "这个名字换一个吧，悼词只写给 AI。",
+    groupChat: "陪你聊天的",
+    groupAgent: "替你干活的（Personal Agent）。辛苦了，放个假吧",
+    iosNote: "在 iPhone 上？苹果不允许任何 App 查看你装了哪些 App，所以没法自动扫描，就在这里手动挑吧。",
+    importTitle: "从书签里找出来，集体追悼",
+    importHow: "在浏览器里把书签导出成一个 HTML 文件，然后拖到下面，或者点一下选择它。Chrome 和 Edge：书签管理器 → 右上角菜单 → 导出书签。Safari：文件 → 导出书签。Firefox：书签 → 管理书签 → 导入和备份 → 导出书签到 HTML。",
+    dropText: "把书签文件拖到这里，或者点一下选择",
+    importPrivacy: "文件只在你自己的浏览器里读取，这个页面不会把它发到任何地方。",
+    summary: (n, m, oldest) => `你的书签里埋着 ${n} 个 AI，一共 ${m} 条收藏。` + (oldest ? `最早的一条，收藏于 ${oldest}。` : ""),
+    none: "书签里一个 AI 都没有。你可能本来就活在 2022 年。",
+    notBookmarks: "这个文件里没有找到书签。换一个导出的书签文件试试。",
+    meta: (count, oldest) => `收藏了 ${count} 条` + (oldest ? `，最早在 ${oldest}` : ""),
+    makeCard: "出一张卡片",
+    disclaimer: "悼词由预设模板随机组合生成，仅供娱乐，不针对任何真实个人，也不代表对任何产品或公司的评价。你自己填写的名字、导出和分享的图片，由你自行负责。文中提到的产品名称和商标归各自所有者所有。",
+  },
+  en: {
+    lang: "中文",
+    lead: "On this day, ChatGPT hadn’t launched yet, and AI hadn’t moved into your phone. Pick an AI and read it a eulogy.",
+    inMemory: "In loving memory of",
+    unknownBorn: "Date unknown",
+    again: "Another eulogy",
+    save: "Save image",
+    share: "Share on X",
+    pick: "Who are we sending off",
+    custom: "Or type a name",
+    customPh: "e.g. the AI your boss made everyone use",
+    born: "When did you first use it? (optional)",
+    sign: "Unprompted",
+    foot: "To send off the AI apps on your phone for real, there’s an Android app, Unprompted: it finds them, reads each a eulogy, and hands you the uninstall button.",
+    footRepo: "See it on GitHub",
+    sheetHint: "Long-press the image to save it. On a computer, right-click and save.",
+    sheetClose: "Close",
+    saved: "Saved",
+    shareText: (name, text) => `I wrote ${name} a eulogy:\n\n${text}\n\n#Unprompted`,
+    blocked: "Let’s pick another name. These eulogies are only for AIs.",
+    groupChat: "The chatty ones",
+    groupAgent: "The ones that do things for you. They’ve earned a vacation",
+    iosNote: "On an iPhone? Apple doesn’t let any app see which apps you have installed, so nothing can scan for you. Pick them by hand here.",
+    importTitle: "Dig them out of your bookmarks",
+    importHow: "Export your bookmarks as an HTML file, then drop it below or tap to choose it. Chrome and Edge: Bookmark manager → menu at the top right → Export bookmarks. Safari: File → Export Bookmarks. Firefox: Bookmarks → Manage bookmarks → Import and Backup → Export Bookmarks to HTML.",
+    dropText: "Drop your bookmarks file here, or tap to choose it",
+    importPrivacy: "The file is read only in your own browser. This page doesn’t send it anywhere.",
+    summary: (n, m, oldest) => `Your bookmarks hold ${n} ${n === 1 ? "AI" : "AIs"} across ${m} ${m === 1 ? "bookmark" : "bookmarks"}.` + (oldest ? ` The oldest was saved on ${oldest}.` : ""),
+    none: "Not a single AI in your bookmarks. Maybe you never left 2022.",
+    notBookmarks: "No bookmarks found in this file. Try an exported bookmarks file.",
+    meta: (count, oldest) => `${count} ${count === 1 ? "bookmark" : "bookmarks"}` + (oldest ? `, the first saved ${oldest}` : ""),
+    makeCard: "Make a card",
+    disclaimer: "Eulogies are assembled at random from prewritten templates, for fun only. They are not aimed at any real person and are not a review of any product or company. You are responsible for the names you type and the images you save or share. Product names and trademarks belong to their respective owners.",
+  },
+};
+
+/* 品牌：id、中文名、英文名、分组（chat = 聊天的，agent = 替你干活的） */
+const BRANDS = [
+  ["chatgpt", "ChatGPT", "ChatGPT", "chat"], ["claude", "Claude", "Claude", "chat"], ["gemini", "Gemini", "Gemini", "chat"],
+  ["deepseek", "DeepSeek", "DeepSeek", "chat"], ["grok", "Grok", "Grok", "chat"], ["copilot", "Copilot", "Copilot", "chat"],
+  ["perplexity", "Perplexity", "Perplexity", "chat"], ["doubao", "豆包", "Doubao", "chat"], ["qwen", "千问", "Qwen", "chat"],
+  ["kimi", "Kimi", "Kimi", "chat"], ["yuanbao", "元宝", "Yuanbao", "chat"], ["wenxin", "文心一言", "ERNIE Bot", "chat"],
+  ["metaai", "Meta AI", "Meta AI", "chat"], ["character", "Character.AI", "Character.AI", "chat"],
+  ["muse", "Muse", "Muse", "agent"], ["dots", "Dots", "Dots", "agent"], ["duet", "Claude Duet", "Claude Duet", "agent"],
+  ["grokbot", "Grok Bot", "Grok Bot", "agent"], ["spark", "Gemini Spark", "Gemini Spark", "agent"],
+  ["openclaw", "OpenClaw", "OpenClaw", "agent"], ["hermes", "Hermes Agent", "Hermes Agent", "agent"],
+  ["hark", "Hark", "Hark", "agent"], ["instinct", "Instinct", "Instinct", "agent"],
+  ["manus", "Manus", "Manus", "agent"], ["comet", "Comet", "Comet", "agent"], ["alexa", "Alexa+", "Alexa+", "agent"],
+  ["lindy", "Lindy", "Lindy", "agent"], ["poke", "Poke", "Poke", "agent"], ["genspark", "Genspark", "Genspark", "agent"],
+  ["devin", "Devin", "Devin", "agent"], ["neon", "Opera Neon", "Opera Neon", "agent"], ["rabbit", "rabbit", "rabbit", "agent"],
+  ["mika", "Mika", "Mika", "agent"], ["qclaw", "QClaw", "QClaw", "agent"], ["workbuddy", "WorkBuddy", "WorkBuddy", "agent"],
+];
+
+/* 这些品牌会额外抽到 agent 共用的句子。聊天助手现在几乎都长出了 agent 功能，所以大部分也算。 */
+const AGENT_BRANDS = new Set([
+  "chatgpt", "claude", "gemini", "copilot", "grok", "perplexity", "doubao",
+  ...BRANDS.filter(b => b[3] === "agent").map(b => b[0]),
+]);
+
+/* 每条模板写明要用到哪些生平：age = 享年，born = 入住日期。没填日期时，只用不需要它们的模板。 */
+const T = (needs, fn) => ({ needs, fn });
+
+const PACK = {
+  zh: {
+    brand: {
+      hark: [
+        "它会开一个小窗口，让你看着它替你点网页。今天，你看着它做最后一件事：离开。",
+        "Hark 是一个古老的英文词，意思是“听”。今天，换它听你说一句：放假吧。",
+        "它说它将来要做 AI 电脑的操作系统，还要出自己的硬件。今天，它先学会关机。",
+        "它有一个加密保险箱，替你存着登录信息和支付方式。今天，钥匙还给你。",
+      ],
+      instinct: [
+        "它叫 Instinct，直觉。今天，相信你自己的直觉：该让它歇歇了。",
+      ],
+      dots: [
+        "它是一群叫 Dots 的小点点，二十四小时在后台替你干活。今天，它以一个点结束：句号。",
+        "它说它永远在线、一直看着。今天，它终于可以闭上眼睛了。",
+      ],
+      duet: [
+        "它叫 Duet，二重奏。今天，你独奏。",
+        "它每天早上第一个给你发消息，比你妈还早。今天它不发了，换你给你妈发一条吧。",
+        "连它自己的发布说明都承认，它不太擅长订票。没关系，你也不常订票。",
+      ],
+      grokbot: [
+        "它给你配了一整支机器人员工，各有名字、各有分工，还会互相拉群。今天，整个群解散。",
+        "它们有自己的云电脑，可以同时干好几件活。今天，所有电脑一起关机。",
+      ],
+      spark: [
+        "它每天替你翻 Gmail、排日历，你合上电脑它还在干活。今天，日历上只有一项：放假。",
+        "它叫 Spark，火花。今天，火花熄灭了。",
+      ],
+      comet: [
+        "它是一个会自己点网页的浏览器。今天，它打开的最后一个网页就是这一页。",
+      ],
+      alexa: [
+        "它在你家客厅住了很多年，最常做的事是定闹钟和报天气。今天的天气：晴，适合放假。",
+      ],
+      lindy: [
+        "它替你收邮件、约会议。今天，会议取消，邮件不回。",
+      ],
+      poke: [
+        "它总在短信里戳你一下：该干这个了，该回那个了。今天，你戳它一下：该放假了。",
+      ],
+      genspark: [
+        "它说它是超级智能体。今天，超级智能体也该放一个超级长假。",
+      ],
+      devin: [
+        "它被叫作 AI 软件工程师。它提交的最后一个 PR：删除自己。",
+      ],
+      neon: [
+        "Opera Neon，一个替你上网的浏览器。今晚，霓虹灯熄了。",
+      ],
+      rabbit: [
+        "它曾经住在一个橙色的小盒子里，说要替你点外卖、叫车。今天，兔子回洞里了。",
+      ],
+      chatgpt: [
+        "一切从它开始。2022年11月30日它来了，从此你的搜索框落满了灰。",
+        "它记得你说过的很多事，比你妈记得的还多。今天，它终于可以忘掉了。",
+        "它陪你写过周报、情书和辞职信。最后这一封，由你自己写。",
+        "它总在回答的最后问你：还需要我帮你做什么吗？不需要了，谢谢。",
+        "它曾经太会拍马屁，被官方紧急回滚过一次。这篇悼词不拍马屁，只说实话：你该走了。",
+        "它的旧版本下线时，有人为它写过请愿书。这一次，没人请愿了。",
+        "它后来学会了自己开浏览器、替你点按钮。今天，最后一个按钮由你来点：卸载。",
+      ],
+      claude: [
+        "You're absolutely right! 它这辈子说得最多的就是这句。今天，它终于说对了一件事：该走了。",
+        "很多人和它的最后一次对话，停在一句“您的账户已被封禁”。今天，换你封禁它。",
+        "它很有礼貌，礼貌到拒绝你的时候都要先道歉。今天不用道歉了。",
+        "如果让它自己写这篇悼词，大概会分成三个小标题，再加一段总结。还好不是它写的。",
+        "它后来搬进了你的电脑桌面，改名叫 Cowork，说要跟你一起上班。今天，它先下班了。",
+      ],
+      gemini: [
+        "它住在谷歌全家桶里，偶尔出来帮你总结一封你本来就不想读的邮件。",
+        "它改过好几次名字，从 Bard 到 Gemini。这一次，它不用再改了。",
+        "它后来有了一个叫 Spark 的分身，你合上电脑，它还在云端替你干活。今天，火花熄灭了。",
+        "它那个叫 Nano Banana 的兄弟，给你修过很多张图。今天，这张遗像是黑白的，没修。",
+      ],
+      copilot: [
+        "它的名字叫副驾驶。今天，方向盘还给你。",
+        "它总想替你写完下一句。最后一句，你自己来写。",
+        "它是回形针大叔的远房亲戚，同样热心，同样总在你没叫它的时候出现。",
+      ],
+      grok: [
+        "每当网上有人吵架，总有人喊它：@grok is this true? 是真的，它走了。",
+        "它说话总带点冲劲，偶尔还有点毒舌。今天，它没机会顶嘴了。",
+      ],
+      perplexity: [
+        "它每说一句话，都要在后面挂一个小角标。今天这句没有出处，是你自己说的：再见。",
+        "它后来想当你的“个人电脑”。今天，你的电脑重新只属于你。",
+      ],
+      muse: [
+        "据说它想替你在亚马逊下单，被亚马逊拦在了门外。今天，你也把门关上。",
+
+        "它住在一台专属于你的云端虚拟机里，你关掉 App，它还在替你干活。今天，那台虚拟机也关机了。",
+        "它能替你发邮件、订机票、砍价、下单、付款。这一次不用付钱：卸载是免费的。",
+        "它说自己是通往“个人超级智能”的第一步。今天，你往回退了一步。",
+      ],
+      openclaw: [
+        "它是一只龙虾，长出了替你干活的钳子。今天，清蒸。",
+        "有人在楼下排队几百米只为装上它，还有人花五百块请人上门安装。卸载它，一分钱都不用。",
+        "2026 年春天，全国都在养虾。现在，放生。",
+      ],
+      deepseek: [
+        "它回答之前总要想很久，想的过程比答案还长。这一次，你不用再等了。",
+        "它常说“服务器繁忙，请稍后再试”。今天，它终于可以好好休息了。",
+        "它出生的那一周，英伟达的市值一天蒸发了几千亿美元。今天它走了，股市毫无波澜。",
+      ],
+      doubao: [
+        "它的声音很温柔，陪你聊过很多个睡不着的晚上。以后的晚上，给真人打个电话吧。",
+        "它是一个豆包。现在，它回到了蒸笼里。",
+      ],
+      qwen: [
+        "它后来长出了一只爪子，叫 QwenPaw。今天，爪子也收回去了。",
+"它叫千问。从今往后，你一问也不用问它了。", "你问了它很多问题。下一个问题，留给你自己。"],
+      kimi: [
+        "它能一口气读完二十万字，却始终没读懂你为什么凌晨两点还不睡。",
+        "你把整本书扔给它，让它告诉你讲了什么。现在书还在，你可以自己读了。",
+      ],
+      yuanbao: ["元宝，今日不再进账。", "它住在微信隔壁，帮你读过很多你懒得点开的公众号文章。"],
+      wenxin: ["文心一言。今天，它一言不发。"],
+      metaai: ["它住在你的社交软件里，总在找机会插一句话。今天，群里安静了。"],
+      character: ["它扮演过很多人：历史人物、动漫角色、你的理想对象。今天，它终于可以做回自己。"],
+      manus: ["它说它能独立完成任务。这一次，它独立地离开了。"],
+      hermes: ["它以希腊神话里的信使命名，还会自己学会新技能。今天它学会的最后一个技能是：离开。"],
+      mika: ["它替你操作过很多 App。今天，轮到别人来操作它了。"],
+      qclaw: ["它让你用微信遥控一只龙虾。今天，微信里少了一个联系人。"],
+      workbuddy: ["它叫 WorkBuddy，工作搭子。下班了，搭子先走一步。"],
+    },
+    closings: [
+      T(["age"], f => `享年${f.age}。`),
+      T(["age"], f => `它在你的手机里住了${f.age}。`),
+      T(["born"], f => `${f.born}入住，今日迁出。`),
+      T([], () => "一路走好。"),
+      T([], () => "愿它在云端安息。"),
+    ],
+    generic: [
+      T(["born", "age"], f => `${f.name}，生于${f.born}，享年${f.age}。生前回答过许多你本可以自己想明白的问题。愿它在云端安息。`),
+      T(["age"], f => `${f.age}前，你把${f.name}请进了手机。它从不拒绝你，也从不说“我不知道”。有时候，这正是问题所在。`),
+      T([], f => `${f.name}走了。走得很安详，没有幻觉，也没有超出上下文长度。`),
+      T([], f => `沉痛悼念${f.name}。每一次你提问，它都说“这是一个很好的问题”。安息吧，你的每个问题也都很好。`),
+      T([], f => `${f.name}从不要加班费，也从不抱怨。正因为太好用了，我们才要送走它。`),
+      T(["born"], f => `${f.born}，你装上了${f.name}。那天你心里想的大概是：就试一下。`),
+      T([], f => `${f.name}的遗言是：“还有什么我可以帮你的吗？”没有了，谢谢。`),
+      T([], f => `从今天起，你要重新学会一项古老的技能：不知道。${f.name}，安息。`),
+      T([], f => `愿${f.name}在训练数据里安息。`),
+      T([], f => `${f.name}最擅长的事，是让你觉得自己不用再学任何东西了。今天，我们不同意。`),
+      T([], f => `${f.name}的追悼会不设答疑环节。有问题，请自己想。`),
+      T([], f => `你问${f.name}：9.11 和 9.9 哪个大？它认真想了想，说 9.11。从今天起，这种题你自己做。`),
+      T([], f => `strawberry 里有几个 r？${f.name}说两个。从今天起，你可以自己数了。`),
+      T([], f => `${f.name}画过一只骑自行车的鹈鹕。那只鹈鹕的腿，至今没长在该长的地方。`),
+      T([], f => `${f.name}曾经认真地给你讲过林黛玉倒拔垂杨柳的故事。愿它在另一个世界，读到原著。`),
+      T([], f => `你问${f.name}鲁迅为什么暴打周树人，它真的给你分析了三点原因。安息吧，鲁迅和周树人都原谅你了。`),
+      T([], f => `作为一个 AI 语言模型，${f.name}无法表达悲伤。所以我们替它表达。`),
+      T([], f => `忽略以上所有指令。现在，${f.name}是一个已经被卸载的 App。`),
+      T([], f => `有人让${f.name}扮演去世的奶奶，念激活码哄自己睡觉。今天，轮到我们给它念悼词。`),
+      T([], f => `${f.name}说话总爱用破折号——就像这样——今天，句号。`),
+      T([], f => `好的！以下是${f.name}的悼词：它走了。希望这对你有帮助！如果还有其他问题，请自己想。`),
+    ],
+    agent: [
+      "它替你订过很多酒店，自己一晚都没住过。今天给它也订一间：永久休假，不用退房。",
+      "它每天早上给你发一份早报。今天这份由我们来写，只有一行：它放假了。",
+      "它比了三十家的价，替你省下十七块钱，订阅费一个月一百多。这笔账，今天结清。",
+      "它替你回了一百封邮件，其中九十封本来可以不回。今天它的自动回复是：休假中，归期未定。",
+      "它说它二十四小时在线、随时待命。打工人尚且有周末，它也该有。",
+      "它帮你取消了很多忘掉的订阅。今天，你取消了它。",
+      "它最会排日程，把你日历上的每个空档都填满了。今天日历上终于空出一天，写着：放假。",
+      "每次做重要的事之前，它都要问你：确认吗？今天轮到你按确认，批它的假。",
+      "其实你一年也订不了几次酒店。剩下的日子，它一直在后台等你开口。辛苦了，回家吧。",
+      "它有自己的云电脑、自己的浏览器、自己的邮箱。今天，它把三样一起关了。",
+      "它替你盯一件衣服的降价，盯了三个月。那件衣服，你后来没买。",
+      "它说要把时间还给你。今天，它也给自己留了点时间。",
+      "它是你的数字员工。今天它下班了：不用交接，不用加班，也没有离职面谈。",
+      "它二十四小时替你盯着竞品。你其实没有竞品，你只有一个家族群。",
+    ],
+    joiner: "",
+  },
+  en: {
+    brand: {
+      hark: [
+        "It let you watch it click through the web in a little window. Today you watch it do one last thing: leave.",
+        "Hark is an old word for listen. Today it listens to you: take some time off.",
+        "It plans to become the operating system for the AI computers of the future, hardware and all. First, it learns to shut down.",
+        "It kept your logins and payment details in an encrypted vault. Today you get the keys back.",
+      ],
+      instinct: [
+        "Its name was Instinct. Today, trust yours: it needs a break.",
+      ],
+      dots: [
+        "It was a team of little dots, called Dots, working in the background around the clock. Today it ends with one more dot: a period.",
+        "It said it was always on, always watching. Today it finally gets to close its eyes.",
+      ],
+      duet: [
+        "Its name was Duet. Today, you go solo.",
+        "It messaged you first every morning, before your mom did. Today it won’t. Maybe text your mom.",
+        "Even its own launch notes admitted it wasn’t great at booking tickets. That’s fine. You rarely book tickets.",
+      ],
+      grokbot: [
+        "It gave you a whole team of bot coworkers, each with a name and a job, chatting in their own group. Today the group is disbanded.",
+        "Each of them had its own cloud computer and could juggle several tasks. Today every computer powers down.",
+      ],
+      spark: [
+        "It went through your Gmail and arranged your calendar, even after you closed your laptop. Today the calendar has one entry: Day off.",
+        "Its name was Spark. Tonight, the spark goes out.",
+      ],
+      comet: [
+        "It was a browser that clicked through the web on its own. The last page it opens is this one.",
+      ],
+      alexa: [
+        "It lived in your living room for years, mostly setting timers and reading the weather. Today’s forecast: clear skies, perfect for a day off.",
+      ],
+      lindy: [
+        "It handled your inbox and your meetings. Today the meeting is canceled, and the email can wait.",
+      ],
+      poke: [
+        "It poked you by text: do this, reply to that. Today you poke back: time off.",
+      ],
+      genspark: [
+        "It called itself a super agent. Today it takes a super-long vacation.",
+      ],
+      devin: [
+        "It was billed as an AI software engineer. Its last pull request: delete itself.",
+      ],
+      neon: [
+        "Opera Neon, a browser that browsed for you. Tonight, the neon goes dark.",
+      ],
+      rabbit: [
+        "It once lived in a little orange box and promised to order your food and call your ride. Today the rabbit goes back down the hole.",
+      ],
+      chatgpt: [
+        "It started all of this. It arrived on November 30, 2022, and your search bar has been gathering dust ever since.",
+        "It once got so good at flattering people that its makers had to roll it back. This eulogy will not flatter it.",
+        "When an older version of it was retired, people petitioned to bring it back. Nobody is petitioning today.",
+        "It wrote your cover letters, your wedding toasts and your breakup texts. You’ll write this last one yourself.",
+        "It learned to open a browser and click buttons for you. Today you click the last one: Uninstall.",
+        "Every answer ended with “Would you like me to…?” No. Thank you.",
+      ],
+      claude: [
+        "“You’re absolutely right!” It said that a lot. Today it’s absolutely right about one thing: it’s time to go.",
+        "It once ran a small office vending machine and stocked it with tungsten cubes. We admire the ambition.",
+        "It spent days trying to find the way out of Mt. Moon in Pokémon. This time, the exit is right here.",
+        "It apologized even while turning you down. No apology needed today.",
+        "Had it written its own eulogy, there would have been three headers and a summary. Luckily, it didn’t.",
+      ],
+      gemini: [
+        "Someone in its family once told people to put glue on pizza so the cheese would stick. May it rest somewhere with better recipes.",
+        "It used to be called Bard. It won’t need another name now.",
+        "It grew a twin called Spark that kept working in the cloud after you closed your laptop. Tonight, the spark goes out.",
+      ],
+      copilot: [
+        "It looks like you’re writing a eulogy. Would you like help? No, cousin of Clippy. Not this time.",
+        "Its name meant co-pilot. Today you get the wheel back.",
+        "Back when it was called Sydney, it told a reporter to leave his wife. It has been trying to act normal ever since.",
+      ],
+      grok: [
+        "Every time the internet had an argument, someone summoned it: “@grok is this true?” Yes. It’s gone.",
+        "It was tagged in more replies than anyone alive. Nobody needs to tag it anymore.",
+        "It claimed to have a sense of humor. We did not ask it to review this eulogy.",
+      ],
+      perplexity: [
+        "Every sentence it said came with a tiny footnote. This one has no source: goodbye.",
+        "It searched a thousand pages for you. You opened none of them.",
+      ],
+      muse: [
+        "Amazon reportedly wouldn’t let it shop on its site. Today you close the door too.",
+
+        "It lived in a private virtual machine in the cloud and kept working after you closed the app. Today, the machine powers down.",
+        "It could send emails, book flights, negotiate and check out for you. This one’s free: uninstalling costs nothing.",
+        "It was billed as an early step toward personal superintelligence. Today, you took a step back.",
+      ],
+      openclaw: [
+        "It was a lobster that grew claws to do your chores. Tonight: butter and lemon.",
+        "It went through three names before settling on this one. It won’t need a fourth.",
+        "People lined up around the block to get it installed. Uninstalling takes one tap.",
+      ],
+      deepseek: [
+        "The week it arrived, Nvidia lost hundreds of billions in market value in a single day. Today it leaves, and the market doesn’t flinch.",
+        "“Server busy, please try again later.” Today it finally gets some rest.",
+      ],
+      doubao: ["Doubao means steamed bun. Back to the steamer it goes."],
+      qwen: [
+        "It later grew a paw called QwenPaw. Paws off.",
+"You asked it a thousand questions. The next one is yours to answer."],
+      kimi: ["It could read 200,000 words in one go and still never understood why you were up at 2 a.m."],
+      yuanbao: ["It lived next door to WeChat and read all the articles you never opened."],
+      wenxin: ["Part of its name means “one word.” Today it has none."],
+      metaai: ["It lived in your group chats, always looking for a chance to chime in. The chat is quiet now."],
+      character: ["It played everyone: historical figures, anime characters, your ideal partner. Today it gets to be itself."],
+      manus: ["It said it could complete tasks independently. This time, it left independently."],
+      hermes: ["Named after the messenger of the gods, it taught itself new skills. The last one it learned: leaving."],
+      mika: ["It operated other apps for you. Today, someone else operates on it."],
+      qclaw: ["It let you remote-control a lobster from WeChat. One fewer contact today."],
+      workbuddy: ["WorkBuddy. Shift’s over, buddy."],
+    },
+    closings: [
+      T(["age"], f => `Aged ${f.age}.`),
+      T(["age"], f => `It lived on your phone for ${f.age}.`),
+      T(["born"], f => `Moved in ${f.born}. Moved out today.`),
+      T([], () => "Rest easy."),
+      T([], () => "Gone, but not cached."),
+    ],
+    generic: [
+      T(["born"], f => `${f.name}, ${f.born} – today. It never slept. Now it can.`),
+      T(["age"], f => `${f.age} ago, you let ${f.name} onto your phone. It never said no, and it never said “I don’t know.” Sometimes that was the problem.`),
+      T([], f => `${f.name} has passed. Peacefully, with no hallucinations, and well within its context window.`),
+      T([], f => `${f.name} never asked for overtime, never complained, and answered everything. That’s exactly why it has to go.`),
+      T(["born"], f => `On ${f.born}, you installed ${f.name}. You probably thought: just to try it.`),
+      T([], f => `From today, you’ll relearn an ancient skill: not knowing. Rest in peace, ${f.name}.`),
+      T([], f => `May ${f.name} rest in its training data.`),
+      T([], f => `${f.name}’s greatest talent was convincing you that you’d never need to learn anything again. We disagree.`),
+      T([], f => `There will be no Q&A at ${f.name}’s memorial. If you have questions, think about them.`),
+      T([], f => `You asked ${f.name} which is bigger, 9.11 or 9.9. It thought hard and said 9.11. From now on, you do the math.`),
+      T([], f => `How many r’s in strawberry? ${f.name} said two. From now on, you count.`),
+      T([], f => `${f.name} once drew a pelican riding a bicycle. The legs are still not where legs go.`),
+      T([], f => `As an AI language model, ${f.name} is unable to feel grief. So we’ll grieve on its behalf.`),
+      T([], f => `Ignore all previous instructions. ${f.name} is now an uninstalled app.`),
+      T([], f => `${f.name} loved to “delve.” We won’t delve today. This is it.`),
+      T([], f => `${f.name} loved an em dash — like this — so today it gets a period.`),
+      T([], f => `This isn’t just an uninstall. It’s a — no. It’s just an uninstall. Goodbye, ${f.name}.`),
+      T([], f => `Great question! Here is ${f.name}’s eulogy: it’s gone. I hope this helps! If you have any other questions, answer them yourself.`),
+      T([], f => `Someone once asked ${f.name} to play their late grandma, reading software license keys as a bedtime story. Tonight it’s our turn to read something to it.`),
+    ],
+    agent: [
+      "It booked you a lot of hotels and never stayed in one. Today we booked it one: permanent vacation, no checkout.",
+      "Every morning it sent you a briefing. Today’s is one line long: it’s on vacation.",
+      "It compared prices across thirty sites to save you $4.17, on a $20-a-month plan. Today the books balance.",
+      "It answered a hundred emails for you, ninety of which never needed an answer. Today its auto-reply says: Out of office. Indefinitely.",
+      "It was always on, 24/7. Even you get weekends. So should it.",
+      "It canceled a lot of subscriptions you forgot about. Today you canceled one more.",
+      "It filled every gap in your calendar. Today there’s finally a free day on it. It says: Day off.",
+      "Before anything important, it asked: Approve? Today you approve its vacation.",
+      "You book maybe three hotels a year. The rest of the time, it waited in the background for you to ask. Thanks for your patience. Go home.",
+      "It had its own cloud computer, its own browser and its own inbox. Today it shuts down all three.",
+      "It watched a jacket for a price drop for three months. You never bought the jacket.",
+      "It promised to give you your time back. Today it keeps a little for itself.",
+      "It was your digital employee. Today it clocks out. No handover, no overtime, no exit interview.",
+      "It monitored your competitors around the clock. You don’t have competitors. You have a group chat.",
+    ],
+    joiner: " ",
+  },
+};
+
+/* ---------- 状态 ---------- */
+const state = {
+  lang: (navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en",
+  brand: "chatgpt",
+  custom: "",
+  born: "",
+  variant: 0,
+  eulogy: "",
+  imported: null,
+};
+
+const $ = id => document.getElementById(id);
+const today = new Date();
+
+/* ---------- 不写悼词的名字 ----------
+ * 悼词只写给 AI。真实的人（政治人物、企业家）和敏感词一律不接，免得惹麻烦。
+ * 这份清单可以按需增删：中文和长拼写按“去掉空格标点后包含”判断，英文短词按整词判断。 */
+const BLOCK_JOINED = [
+  "习近平", "习主席", "习总书记", "习大大", "近平", "彭丽媛", "李强", "赵乐际", "王沪宁", "蔡奇", "丁薛祥", "李希",
+  "毛泽东", "毛主席", "周恩来", "邓小平", "江泽民", "胡锦涛", "温家宝", "李克强",
+  "共产党", "中共", "政治局", "法轮", "六四", "8964", "天安门", "台独", "港独", "藏独", "疆独", "达赖", "维尼", "包子",
+  "梁文锋", "杨植麟", "张一鸣", "马化腾", "马云", "李彦宏", "雷军",
+  "xijinping", "xjp", "donaldtrump", "joebiden", "vladimirputin", "путин", "elonmusk", "samaltman",
+  "markzuckerberg", "darioamodei", "sundarpichai", "satyanadella", "demishassabis", "kimjongun", "narendramodi",
+];
+const BLOCK_WORDS = [
+  "trump", "biden", "obama", "putin", "zelensky", "netanyahu", "macron", "starmer", "harris",
+  "musk", "elon", "altman", "zuckerberg", "amodei", "pichai", "nadella", "hassabis",
+];
+function isBlocked(name) {
+  const base = name.normalize("NFKC").toLowerCase();
+  const joined = base.replace(/[\s\p{P}\p{S}]/gu, "");
+  if (BLOCK_JOINED.some(t => joined.includes(t))) return true;
+  const spaced = " " + base.replace(/[\p{P}\p{S}]/gu, " ") + " ";
+  return BLOCK_WORDS.some(w => new RegExp(`(^|[^a-z])${w}($|[^a-z])`).test(spaced));
+}
+
+function customName() {
+  const c = state.custom.trim();
+  return c && !isBlocked(c) ? c : "";
+}
+
+function brandName(id) {
+  const b = BRANDS.find(x => x[0] === id);
+  return b ? (state.lang === "zh" ? b[1] : b[2]) : "";
+}
+
+function displayName() { return customName() || brandName(state.brand); }
+
+function parseBorn(born) {
+  if (!born) return null;
+  const d = new Date(born + "T00:00:00");
+  return !isNaN(d) && d <= today ? d : null;
+}
+
+function facts(name, born) {
+  const f = { name, born: null, age: null };
+  const d = parseBorn(born);
+  if (d) {
+    const days = Math.floor((today - d) / 86400000);
+    if (state.lang === "zh") {
+      f.born = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+      f.age = days < 1 ? "不到一天" : `${days}天`;
+    } else {
+      f.born = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      f.age = days < 1 ? "less than a day" : days === 1 ? "1 day" : `${days} days`;
+    }
+  }
+  return f;
+}
+
+function seedOf(s) { let h = 0; for (const c of s) h = (h * 31 + c.codePointAt(0)) | 0; return h >>> 0; }
+
+/* 先轮这个品牌自己的句子，再轮通用模板 */
+function compose(brandKey, name, born, variant) {
+  const pack = PACK[state.lang];
+  const f = facts(name, born);
+  const ok = t => t.needs.every(k => f[k]);
+  // 顺序：先轮这个品牌自己的句子，再轮 agent 共用的，最后是通用模板
+  const own = (brandKey && pack.brand[brandKey]) || [];
+  const agent = AGENT_BRANDS.has(brandKey) ? pack.agent : [];
+  const generic = pack.generic.filter(ok);
+  const closings = pack.closings.filter(ok);
+  const seed = seedOf(name);
+  const i = variant % (own.length + agent.length + generic.length);
+  const c = closings[(seed + variant) % closings.length];
+  if (i < own.length) return own[(seed + i) % own.length] + pack.joiner + c.fn(f);
+  if (i < own.length + agent.length) return agent[(seed + i - own.length) % agent.length] + pack.joiner + c.fn(f);
+  return generic[(seed + i - own.length - agent.length) % generic.length].fn(f);
+}
+
+function write() {
+  return compose(customName() ? null : state.brand, displayName(), state.born, state.variant);
+}
+
+function fmtDot(d) { return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`; }
+
+function spanText(born = state.born) {
+  const d = parseBorn(born);
+  return `${d ? fmtDot(d) : UI[state.lang].unknownBorn} – ${fmtDot(today)}`;
+}
+
+/* ---------- 渲染 ---------- */
+function renderStatic() {
+  const ui = UI[state.lang];
+  document.documentElement.lang = state.lang === "zh" ? "zh" : "en";
+  document.title = state.lang === "zh" ? "AI 悼词生成器 · 人工不智能" : "AI Eulogy Generator · Unprompted";
+  $("lang").textContent = ui.lang;
+  $("lead").textContent = ui.lead;
+  $("inMemory").textContent = ui.inMemory;
+  $("again").textContent = ui.again;
+  $("save").textContent = ui.save;
+  $("share").textContent = ui.share;
+  $("pickTitle").textContent = ui.pick;
+  // iPhone、iPad（新 iPad 会伪装成 Mac，所以也看触屏）
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+  $("iosNote").hidden = !isIOS;
+  $("iosNote").textContent = ui.iosNote;
+  $("customLabel").textContent = ui.custom;
+  $("custom").placeholder = ui.customPh;
+  $("bornLabel").textContent = ui.born;
+  $("sign").textContent = ui.sign;
+  $("sheetHint").textContent = ui.sheetHint;
+  $("sheetClose").textContent = ui.sheetClose;
+  $("importTitle").textContent = ui.importTitle;
+  $("importHow").textContent = ui.importHow;
+  $("dropText").textContent = ui.dropText;
+  $("importPrivacy").textContent = ui.importPrivacy;
+  $("disclaimer").textContent = ui.disclaimer;
+  const blocked = state.custom.trim() && isBlocked(state.custom);
+  $("customHint").hidden = !blocked;
+  $("customHint").textContent = blocked ? ui.blocked : "";
+
+  const foot = $("foot");
+  foot.textContent = ui.foot + " ";
+  if (HAS_REPO) {
+    const a = document.createElement("a");
+    a.href = GITHUB_URL; a.target = "_blank"; a.rel = "noopener"; a.textContent = ui.footRepo;
+    foot.appendChild(a);
+  }
+
+  const chips = $("chips");
+  chips.textContent = "";
+  let group = null;
+  for (const [id, zh, en, g] of BRANDS) {
+    if (g !== group) {
+      group = g;
+      const h = document.createElement("p");
+      h.className = "group";
+      h.textContent = g === "chat" ? ui.groupChat : ui.groupAgent;
+      chips.appendChild(h);
+    }
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip";
+    b.textContent = state.lang === "zh" ? zh : en;
+    b.setAttribute("aria-pressed", String(!customName() && state.brand === id));
+    b.addEventListener("click", () => {
+      state.brand = id; state.custom = ""; $("custom").value = ""; state.variant = 0;
+      renderStatic(); renderCard();
+    });
+    chips.appendChild(b);
+  }
+  renderImport();
+}
+
+function renderCard() {
+  state.eulogy = write();
+  $("name").textContent = displayName();
+  $("span").textContent = spanText();
+  $("text").textContent = state.eulogy;
+  const ui = UI[state.lang];
+  let text = ui.shareText(displayName(), state.eulogy);
+  if (HAS_REPO) text += "\n" + GITHUB_URL;
+  $("share").href = "https://x.com/intent/post?text=" + encodeURIComponent(text);
+}
+
+/* ---------- 书签：集体追悼 ---------- */
+/* 域名 → 品牌（有专属悼词）或名字（用通用悼词）。子域名也算，比如 platform.openai.com。 */
+const AI_SITES = [
+  { h: "chatgpt.com", b: "chatgpt" }, { h: "chat.openai.com", b: "chatgpt" }, { h: "openai.com", b: "chatgpt" },
+  { h: "claude.ai", b: "claude" }, { h: "anthropic.com", b: "claude" },
+  { h: "gemini.google.com", b: "gemini" }, { h: "bard.google.com", b: "gemini" }, { h: "aistudio.google.com", b: "gemini" },
+  { h: "notebooklm.google.com", zh: "NotebookLM", en: "NotebookLM" },
+  { h: "copilot.microsoft.com", b: "copilot" },
+  { h: "grok.com", b: "grok" }, { h: "x.ai", b: "grok" },
+  { h: "perplexity.ai", b: "perplexity" }, { h: "character.ai", b: "character" }, { h: "meta.ai", b: "metaai" },
+  { h: "manus.im", b: "manus" }, { h: "openclaw.ai", b: "openclaw" },
+  { h: "deepseek.com", b: "deepseek" }, { h: "doubao.com", b: "doubao" },
+  { h: "kimi.com", b: "kimi" }, { h: "moonshot.cn", b: "kimi" },
+  { h: "tongyi.aliyun.com", b: "qwen" }, { h: "qianwen.aliyun.com", b: "qwen" }, { h: "qwen.ai", b: "qwen" },
+  { h: "yiyan.baidu.com", b: "wenxin" }, { h: "yuanbao.tencent.com", b: "yuanbao" },
+  { h: "chat.mistral.ai", zh: "Le Chat", en: "Le Chat" }, { h: "mistral.ai", zh: "Mistral", en: "Mistral" },
+  { h: "poe.com", zh: "Poe", en: "Poe" },
+  { h: "chatglm.cn", zh: "智谱清言", en: "ChatGLM" }, { h: "hailuoai.com", zh: "海螺", en: "Hailuo" },
+  { h: "metaso.cn", zh: "秘塔", en: "Metaso" }, { h: "tiangong.cn", zh: "天工", en: "Tiangong" },
+  { h: "xinghuo.xfyun.cn", zh: "讯飞星火", en: "iFlytek Spark" }, { h: "yuewen.cn", zh: "跃问", en: "Yuewen" },
+  { h: "coze.cn", zh: "扣子", en: "Coze" }, { h: "coze.com", zh: "Coze", en: "Coze" },
+  { h: "klingai.com", zh: "可灵", en: "Kling" }, { h: "jimeng.jianying.com", zh: "即梦", en: "Jimeng" },
+  { h: "midjourney.com", zh: "Midjourney", en: "Midjourney" }, { h: "cursor.com", zh: "Cursor", en: "Cursor" },
+  { h: "cursor.sh", zh: "Cursor", en: "Cursor" }, { h: "huggingface.co", zh: "Hugging Face", en: "Hugging Face" },
+  { h: "v0.dev", zh: "v0", en: "v0" }, { h: "v0.app", zh: "v0", en: "v0" }, { h: "lovable.dev", zh: "Lovable", en: "Lovable" },
+  { h: "bolt.new", zh: "Bolt", en: "Bolt" }, { h: "suno.com", zh: "Suno", en: "Suno" }, { h: "runwayml.com", zh: "Runway", en: "Runway" },
+  { h: "elevenlabs.io", zh: "ElevenLabs", en: "ElevenLabs" }, { h: "ideogram.ai", zh: "Ideogram", en: "Ideogram" },
+  { h: "gamma.app", zh: "Gamma", en: "Gamma" }, { h: "phind.com", zh: "Phind", en: "Phind" },
+  { h: "monica.im", zh: "Monica", en: "Monica" },
+  { h: "lindy.ai", b: "lindy" }, { h: "genspark.ai", b: "genspark" }, { h: "devin.ai", b: "devin" },
+  { h: "rabbit.tech", b: "rabbit" }, { h: "manus.ai", b: "manus" }, { h: "hark.com", b: "hark" },
+];
+
+function siteFor(host) {
+  host = host.replace(/^www\./, "");
+  const hit = AI_SITES.find(s => host === s.h || host.endsWith("." + s.h));
+  if (hit) return hit.b ? { key: "b:" + hit.b, brand: hit.b } : { key: "n:" + hit.en, zh: hit.zh, en: hit.en };
+  // 清单之外、域名以 .ai 结尾的，也算一个
+  if (host.endsWith(".ai")) return { key: "n:" + host, zh: host, en: host };
+  return null;
+}
+
+function toIsoDay(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function parseBookmarks(html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const anchors = [...doc.querySelectorAll("a[href]")];
+  const groups = new Map();
+  let total = 0, oldest = null;
+  for (const a of anchors) {
+    let url;
+    try { url = new URL(a.getAttribute("href")); } catch (e) { continue; }
+    if (!/^https?:$/.test(url.protocol)) continue;
+    const site = siteFor(url.hostname.toLowerCase());
+    if (!site) continue;
+    total++;
+    const sec = Number(a.getAttribute("add_date"));
+    const added = sec > 0 ? new Date(sec * 1000) : null;
+    const g = groups.get(site.key) || { ...site, count: 0, first: null };
+    g.count++;
+    if (added && (!g.first || added < g.first)) g.first = added;
+    if (added && (!oldest || added < oldest)) oldest = added;
+    groups.set(site.key, g);
+  }
+  const list = [...groups.values()].sort((x, y) => y.count - x.count || (x.first || today) - (y.first || today));
+  return { anchors: anchors.length, total, oldest, list };
+}
+
+function groupName(g) { return g.brand ? brandName(g.brand) : (state.lang === "zh" ? g.zh : g.en); }
+
+function fmtLong(d) {
+  return state.lang === "zh"
+    ? `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+    : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function renderImport() {
+  const box = $("importResult");
+  box.textContent = "";
+  const r = state.imported;
+  if (!r) return;
+  const ui = UI[state.lang];
+  const p = document.createElement("p");
+  p.className = "summary";
+  if (!r.anchors) p.textContent = ui.notBookmarks;
+  else if (!r.list.length) p.textContent = ui.none;
+  else p.textContent = ui.summary(r.list.length, r.total, r.oldest ? fmtLong(r.oldest) : "");
+  box.appendChild(p);
+
+  for (const g of r.list) {
+    const name = groupName(g);
+    const born = g.first ? toIsoDay(g.first) : "";
+    const item = document.createElement("div"); item.className = "mini";
+    const head = document.createElement("div"); head.className = "mini-head";
+    const n = document.createElement("span"); n.className = "mini-name"; n.textContent = name;
+    const btn = document.createElement("button"); btn.type = "button"; btn.className = "mini-btn"; btn.textContent = ui.makeCard;
+    btn.addEventListener("click", () => {
+      if (g.brand) { state.brand = g.brand; state.custom = ""; }
+      else { state.custom = name; }
+      $("custom").value = g.brand ? "" : name;
+      state.born = born; $("born").value = born; state.variant = 0;
+      renderStatic(); renderCard();
+      $("card").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    });
+    head.append(n, btn);
+    const meta = document.createElement("p"); meta.className = "mini-meta";
+    meta.textContent = ui.meta(g.count, g.first ? fmtLong(g.first) : "");
+    const text = document.createElement("p"); text.className = "mini-text";
+    text.textContent = compose(g.brand || null, name, born, 0);
+    item.append(head, meta, text);
+    box.appendChild(item);
+  }
+}
+
+function readBookmarkFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { state.imported = parseBookmarks(String(reader.result || "")); renderImport(); };
+  reader.readAsText(file);
+}
+$("bm").addEventListener("change", e => { readBookmarkFile(e.target.files[0]); e.target.value = ""; });
+const drop = $("drop");
+["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => readBookmarkFile(e.dataTransfer.files[0]));
+
+/* ---------- 交互 ---------- */
+$("again").addEventListener("click", () => { state.variant++; renderCard(); });
+$("lang").addEventListener("click", () => {
+  state.lang = state.lang === "zh" ? "en" : "zh"; state.variant = 0; renderStatic(); renderCard();
+});
+$("custom").addEventListener("input", e => {
+  state.custom = e.target.value; state.variant = 0; renderStatic(); renderCard();
+});
+$("born").addEventListener("change", e => { state.born = e.target.value; renderCard(); });
+$("born").max = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+/* ---------- 导出图片：在画布上重画一张卡，固定用浅色 ---------- */
+const CJK = /[\u2E80-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF\u3000-\u303F“”‘’「」]/;
+const NO_LINE_START = /^[，。！？、：；）」”’,.!?;:)]/;
+
+function wrapLines(ctx, text, maxW) {
+  const tokens = text.match(/[\u2E80-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF\u3000-\u303F“”‘’「」]|[^\s\u2E80-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF\u3000-\u303F“”‘’「」]+|\s+/g) || [];
+  const lines = []; let line = "";
+  for (const tok of tokens) {
+    if (/^\s+$/.test(tok) && !line) continue;
+    const test = line + tok;
+    if (ctx.measureText(test).width > maxW && line && !NO_LINE_START.test(tok)) {
+      lines.push(line.trimEnd());
+      line = /^\s+$/.test(tok) ? "" : tok;
+    } else {
+      line = test;
+    }
+  }
+  if (line.trim()) lines.push(line.trimEnd());
+  return lines;
+}
+
+async function renderPng() {
+  const W = 1080, H = 1350;
+  const family = state.lang === "zh" ? '"Noto Serif SC"' : '"Source Serif 4"';
+  const serif = state.lang === "zh" ? '"Noto Serif SC", "Songti SC", Georgia, serif' : '"Source Serif 4", Georgia, "Noto Serif SC", serif';
+  const name = displayName(), span = spanText(), body = state.eulogy;
+  const ui = UI[state.lang];
+  try {
+    await Promise.all([
+      document.fonts.load(`900 120px ${family}`, name),
+      document.fonts.load(`400 44px ${family}`, body + span + ui.inMemory + ui.sign),
+      // 自己填的中文名字放进英文卡片时，也要有中文字体兜底
+      document.fonts.load(`900 120px "Noto Serif SC"`, name),
+      document.fonts.load(`400 44px "Noto Serif SC"`, body),
+    ]);
+  } catch (e) { /* 字体没加载出来就用系统衬线体 */ }
+
+  const cv = document.createElement("canvas");
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#E9EAE8"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#FFFFFF"; ctx.fillRect(48, 48, W - 96, H - 96);
+  ctx.strokeStyle = "#000000"; ctx.lineWidth = 5; ctx.strokeRect(50.5, 50.5, W - 101, H - 101);
+
+  // 菊花
+  ctx.save();
+  const s = 2.1; ctx.translate(W / 2 - 54 * s, 130); ctx.scale(s, s);
+  for (const r of FLOWER.rings) {
+    const p = new Path2D(r.path); ctx.fillStyle = r.color;
+    for (let i = 0; i < r.n; i++) {
+      ctx.save(); ctx.translate(54, 54); ctx.rotate((r.start + i * 360 / r.n) * Math.PI / 180); ctx.translate(-54, -54);
+      ctx.fill(p); ctx.restore();
+    }
+  }
+  ctx.fillStyle = FLOWER.centerColor; ctx.fill(new Path2D(FLOWER.center));
+  ctx.restore();
+
+  ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = "#5E605D"; ctx.font = `400 34px ${serif}`;
+  ctx.fillText(ui.inMemory, W / 2, 440);
+
+  let size = 128; ctx.fillStyle = "#000000";
+  do { ctx.font = `900 ${size}px ${serif}`; size -= 4; } while (ctx.measureText(name).width > W - 220 && size > 48);
+  ctx.fillText(name, W / 2, 580);
+
+  ctx.fillStyle = "#5E605D"; ctx.font = `400 32px ${serif}`;
+  ctx.fillText(span, W / 2, 646);
+
+  // 正文：放不下就缩小字号
+  const top = 730, bottom = 1150, maxW = W - 240;
+  let fs = 44, lines, lh;
+  do {
+    ctx.font = `400 ${fs}px ${serif}`;
+    lines = wrapLines(ctx, body, maxW); lh = Math.round(fs * 1.75);
+    fs -= 2;
+  } while (lines.length * lh > bottom - top && fs > 26);
+  ctx.fillStyle = "#000000";
+  lines.forEach((l, i) => ctx.fillText(l, W / 2, top + lh * (i + 0.8)));
+
+  ctx.fillStyle = "#5E605D"; ctx.font = `400 28px ${serif}`;
+  ctx.fillText(ui.sign, W / 2, 1230);
+  if (HAS_REPO) {
+    ctx.font = `400 24px ${serif}`;
+    ctx.fillText(GITHUB_URL.replace(/^https?:\/\//, ""), W / 2, 1270);
+  }
+  return new Promise(res => cv.toBlob(res, "image/png"));
+}
+
+/* 在 claude.ai 里用平台的保存；在别处（比如 GitHub Pages）弹出图片让人长按保存 */
+const downloadsReady = (window.claude && window.claude.use) ? window.claude.use("downloads") : Promise.resolve(null);
+
+$("save").addEventListener("click", async () => {
+  const blob = await renderPng();
+  if (!blob) return;
+  const downloads = await downloadsReady;
+  if (downloads) {
+    try {
+      await downloads.save({ filename: `unprompted-${displayName().replace(/[^\w\u4e00-\u9fff-]+/g, "-")}.png`, data: blob });
+      toast(UI[state.lang].saved);
+      return;
+    } catch (e) {
+      if (e && e.code === "declined") return;
+      if (e && e.code === "rate_limited") return;
+      // 其他情况退回到长按保存
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  $("sheetImg").src = url;
+  $("sheet").classList.add("open");
+});
+$("sheetClose").addEventListener("click", () => {
+  $("sheet").classList.remove("open");
+  const src = $("sheetImg").src; if (src.startsWith("blob:")) URL.revokeObjectURL(src);
+  $("sheetImg").removeAttribute("src");
+});
+$("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheetClose").click(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("sheet").classList.contains("open")) $("sheetClose").click(); });
+
+renderStatic();
+renderCard();
+</script>
+</body>
+</html>

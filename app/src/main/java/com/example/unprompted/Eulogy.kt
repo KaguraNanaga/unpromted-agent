@@ -19,20 +19,32 @@ class EulogyPack(
     val format: (RawFacts) -> Facts,
     /** 品牌句和身后事之间：中文直接接上，英文空一格 */
     val joiner: String,
+    /** 替你干活的那一类 AI 共用的句子：订酒店、发邮件、比价、早报……送它们去放个假 */
+    val agentLines: List<String> = emptyList(),
+)
+
+/** 这些品牌会额外抽到 agentLines。现在的聊天助手几乎都长出了 agent 功能，所以大部分都算。 */
+val AGENT_BRANDS = setOf(
+    "chatgpt", "claude", "gemini", "copilot", "grok", "perplexity", "doubao",
+    "muse", "duet", "grokbot", "openclaw", "hermes", "manus", "mika", "qclaw", "workbuddy", "copaw", "claw",
+    "alexa", "neon", "hark", "lindy", "poke", "genspark", "devin", "nanobot",
 )
 
 object Eulogy {
-    /** 第 variant 篇悼词。先轮完这个品牌自己的句子，再轮通用模板，然后从头再来。 */
+    /** 第 variant 篇悼词，轮完一圈从头再来。 */
     fun write(packageName: String, brandId: String?, raw: RawFacts, variant: Int, zh: Boolean): String {
         val pack = if (zh) EulogyZh.pack else EulogyEn.pack
         val facts = pack.format(raw)
         val seed = packageName.hashCode() and 0x7fffffff
-        val lines = pack.brandLines[brandId].orEmpty()
-        val i = variant % (lines.size + pack.generic.size)
-        return if (i < lines.size) {
-            lines[(seed + i) % lines.size] + pack.joiner + pack.closings[(seed + variant) % pack.closings.size](facts)
-        } else {
-            pack.generic[(seed + i - lines.size) % pack.generic.size](facts)
+        // 顺序：先轮这个品牌自己的句子，再轮 agent 共用的，最后是通用模板
+        val own = pack.brandLines[brandId].orEmpty()
+        val agent = if (brandId in AGENT_BRANDS) pack.agentLines else emptyList()
+        val i = variant % (own.size + agent.size + pack.generic.size)
+        val closing = pack.closings[(seed + variant) % pack.closings.size](facts)
+        return when {
+            i < own.size -> own[(seed + i) % own.size] + pack.joiner + closing
+            i < own.size + agent.size -> agent[(seed + i - own.size) % agent.size] + pack.joiner + closing
+            else -> pack.generic[(seed + i - own.size - agent.size) % pack.generic.size](facts)
         }
     }
 }

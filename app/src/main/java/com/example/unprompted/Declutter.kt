@@ -73,6 +73,7 @@ private val zhCopy = DeclutterCopy(
         "副业导师" to "“零基础用 AI 月入过万”",
         "一人公司传教士" to "“一个人加十个 Agent，就是一家公司”",
         "养虾教程号" to "“三分钟装好龙虾，从此躺赚”",
+        "Agent 横评号" to "“我让五个 Agent 同时帮我订同一家酒店，结果……”",
     ),
     keywords = listOf(
         "AI", "Agent", "智能体", "龙虾", "提效", "干货", "炸裂", "颠覆", "变天", "封神", "保姆级",
@@ -110,6 +111,7 @@ private val enCopy = DeclutterCopy(
         "Agent hustle gurus" to "“One person + 12 agents = a \$1M company”",
         "LinkedIn thought leaders" to "“I asked ChatGPT about my kid’s lemonade stand. Here’s what it taught me about B2B sales.”",
         "Lobster farmers" to "“Set up your own OpenClaw in 3 minutes and never work again”",
+        "Agent reviewers" to "“I asked 5 agents to book the same hotel. Here’s what happened.”",
     ),
     keywords = listOf(
         "AI", "agent", "agentic", "🧵", "game-changer", "this changes everything", "10x", "unlock",

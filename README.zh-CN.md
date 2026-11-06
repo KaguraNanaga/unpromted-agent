@@ -6,7 +6,19 @@
 
 找出手机里的 AI 应用，为它们念一篇悼词，再由你亲手确认卸载。然后，去关注列表里做一次断舍离。
 
-**[下载中英双语 APK](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-v0.1.0-preview.apk)** · [发布说明](https://github.com/KaguraNanaga/unpromted-agent/releases/tag/v0.1.0) · [反馈问题](https://github.com/KaguraNanaga/unpromted-agent/issues)
+**[打开网页版](https://kagurananaga.github.io/unpromted-agent/)** · **[下载中英双语 APK](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/unprompted-v0.2.0-preview.apk)** · [发布说明](https://github.com/KaguraNanaga/unpromted-agent/releases/tag/v0.2.0) · [反馈问题](https://github.com/KaguraNanaga/unpromted-agent/issues)
+
+## v0.2.0 更新
+
+- 新增 10 个品牌识别规则，包括 Claude Duet、Grok Bot、Alexa、Opera Neon、Hark、Lindy、Poke、Genspark、Devin 和 nanobot。
+- 中英文各新增 14 条 Agent 共用悼词，并补充品牌专属文案和“Agent 横评号”取关类型。
+- 新增 **[网页版悼词生成器](https://kagurananaga.github.io/unpromted-agent/)**，iPhone 和电脑也能直接使用。
+
+## 打开网页版
+
+进入 **[网页版](https://kagurananaga.github.io/unpromted-agent/)**，选择一个 AI 或填写名字，可选填首次使用日期，再生成悼词卡片。支持中英文切换、保存 PNG 图片及打开预填的 X 分享内容。
+
+还可以导入浏览器导出的书签 HTML 文件，找出 AI 网站并生成卡片。书签文件只在你的浏览器中读取，不会上传。网页版通过手动选择和书签识别，扫描手机应用请使用安卓版本。
 
 ## 演示
 
@@ -24,13 +36,13 @@
 
 ## 安装
 
-1. 下载 [unprompted-v0.1.0-preview.apk](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-v0.1.0-preview.apk)，无需 GitHub 账号，也不需要 Android Studio。
+1. 下载 [unprompted-v0.2.0-preview.apk](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/unprompted-v0.2.0-preview.apk)，无需 GitHub 账号，也不需要 Android Studio。
 2. 在安卓 8.0 或更高版本的手机上打开 APK。
 3. 手机提示时，允许当前浏览器或文件管理器“安装未知应用”。
 
 这是使用调试证书签名的**公开预览版**。如果之前的测试版提示签名冲突，需要先卸载旧测试版；卸载会清除本地“放过它”清单和取关计数。最初的“回到11.29”使用不同包名，可以与本版共存。
 
-当前包名为 `com.example.unprompted`。[SHA256SUMS.txt](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/SHA256SUMS.txt) 提供 APK 和视频的校验值。
+当前包名为 `com.example.unprompted`。[SHA256SUMS.txt](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/SHA256SUMS.txt) 提供 APK 的校验值。
 
 ## 中英文切换
 
@@ -55,8 +67,11 @@
 
 如已安装 JDK 17 和 Android SDK，可运行 `./gradlew :app:assembleDebug`；Windows 使用 `gradlew.bat :app:assembleDebug`。输出位于 `app/build/outputs/apk/debug/app-debug.apk`。
 
+网页版通过 GitHub Pages 从 `main` 分支的 `docs/` 目录发布，修改 `docs/index.html` 后会自动部署。
+
 ## 修改内容
 
+- [`docs/index.html`](docs/index.html)：网页生成器、书签导入和 PNG 导出。
 - [`Detector.kt`](app/src/main/java/com/example/unprompted/Detector.kt)：已知包名、品牌关键词和通用识别规则。
 - [`EulogyZh.kt`](app/src/main/java/com/example/unprompted/EulogyZh.kt)、[`EulogyEn.kt`](app/src/main/java/com/example/unprompted/EulogyEn.kt)：中英文悼词。
 - [`Declutter.kt`](app/src/main/java/com/example/unprompted/Declutter.kt)：各语言的平台、账号类型、关键词和计数文案。

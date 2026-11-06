@@ -8,7 +8,19 @@ A small Android app for saying goodbye to the AI apps on your phone, one eulogy 
 
 [![Build APK](https://github.com/KaguraNanaga/unpromted-agent/actions/workflows/build.yml/badge.svg)](https://github.com/KaguraNanaga/unpromted-agent/actions/workflows/build.yml)
 
-**[Download the bilingual APK](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-v0.1.0-preview.apk)** · [Release notes](https://github.com/KaguraNanaga/unpromted-agent/releases/tag/v0.1.0) · [Report an issue](https://github.com/KaguraNanaga/unpromted-agent/issues)
+**[Try the web app](https://kagurananaga.github.io/unpromted-agent/)** · **[Download the bilingual APK](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/unprompted-v0.2.0-preview.apk)** · [Release notes](https://github.com/KaguraNanaga/unpromted-agent/releases/tag/v0.2.0) · [Report an issue](https://github.com/KaguraNanaga/unpromted-agent/issues)
+
+## New in v0.2.0
+
+- Ten more brand rules, including Claude Duet, Grok Bot, Alexa, Opera Neon, Hark, Lindy, Poke, Genspark, Devin, and nanobot.
+- Fourteen shared agent eulogies in each language, plus new brand-specific lines and an agent-reviewer category in the unfollow list.
+- A **[web eulogy generator](https://kagurananaga.github.io/unpromted-agent/)** for iPhone, desktop, and anyone who wants to try it without installing an APK.
+
+## Try it in your browser
+
+Open **[the web app](https://kagurananaga.github.io/unpromted-agent/)**, choose an AI or type its name, optionally enter when you first used it, then generate a card. Switch between English and Chinese, save the card as a PNG, or open a prefilled post on X.
+
+You can also import an exported bookmarks HTML file to find AI websites and create cards for them. The file is read in your browser and is not uploaded. The web app works with manual choices and bookmarks; phone app scanning is available in the Android app.
 
 ## See it in action
 
@@ -36,13 +48,13 @@ The English list includes X, LinkedIn, Instagram, Threads, TikTok, YouTube, and 
 
 ## Install
 
-1. Download **[unprompted-v0.1.0-preview.apk](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/unprompted-v0.1.0-preview.apk)** from the public release. No GitHub account or Android Studio is needed to download it.
+1. Download **[unprompted-v0.2.0-preview.apk](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/unprompted-v0.2.0-preview.apk)** from the public release. No GitHub account or Android Studio is needed to download it.
 2. Open it on a phone running **Android 8.0 or later**.
 3. When Android asks, allow installation from the browser or file manager you used.
 
 This is a **debug-signed public preview**. If an earlier test build reports a signature conflict, uninstall that test build first. Uninstalling clears its local spared-app list and unfollow counter. It can coexist with the original “回到11.29” prototype because that prototype used a different package name.
 
-The current application ID is `com.example.unprompted`. APK and video checksums are available in [SHA256SUMS.txt](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.1.0/SHA256SUMS.txt).
+The current application ID is `com.example.unprompted`. APK checksums are available in [SHA256SUMS.txt](https://github.com/KaguraNanaga/unpromted-agent/releases/download/v0.2.0/SHA256SUMS.txt).
 
 ## English and Chinese
 
@@ -73,10 +85,13 @@ If you already have JDK 17 and an Android SDK installed, build locally with:
 
 On Windows, use `gradlew.bat :app:assembleDebug`. The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
 
+The web app is published from `docs/` using GitHub Pages; edits to `docs/index.html` deploy from `main`.
+
 ## Change the rules or the copy
 
 | File | What it controls |
 | --- | --- |
+| [`docs/index.html`](docs/index.html) | Browser generator, bookmark import, and PNG export |
 | [`Detector.kt`](app/src/main/java/com/example/unprompted/Detector.kt) | Known packages, brand keywords, and broader AI detection rules |
 | [`EulogyZh.kt`](app/src/main/java/com/example/unprompted/EulogyZh.kt) / [`EulogyEn.kt`](app/src/main/java/com/example/unprompted/EulogyEn.kt) | Chinese and English eulogy templates |
 | [`Declutter.kt`](app/src/main/java/com/example/unprompted/Declutter.kt) | Platform links, account types, keywords, and milestones for each language |
